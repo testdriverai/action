@@ -1,0 +1,22 @@
+name: Dashcam TestDriver
+description: Run tests based on human language
+author: Michael Layne
+branding:
+  icon: "box"
+  color: "orange"
+inputs:
+  prompt:
+    description: >-
+      Your test prompt
+    required: true
+
+outputs:
+  summary:
+    description: >-
+      The summary of the test result
+  shareLink:
+    description: >-
+      The share link of dash recording
+runs:
+  using: node16
+  main: ./dist/index.js
