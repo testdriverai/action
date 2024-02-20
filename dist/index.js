@@ -30843,7 +30843,7 @@ function setOutput(summary, shareLink) {
 }
 
 (async function () {
-  console.log(config);
+  console.log(config, process.env.GH_TOKEN);
 
   const octokit = github.getOctokit(process.env.GH_TOKEN);
 
