@@ -13,3 +13,5 @@ jobs:
       - uses: ./
         with:
           prompt: Hello, world!
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
