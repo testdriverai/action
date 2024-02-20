@@ -15,8 +15,8 @@ function setOutput(summary, shareLink) {
   const dispatchResult = await octokit.request(
     "POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches",
     {
-      owner: "testdriverdev",
-      repo: "testdriver",
+      owner: "replayableio",
+      repo: "testdriver-dev",
       workflow_id: "interpret-comment.yml",
       inputs: {
         repo: config.githubContext.owner + "/" + config.githubContext.repo,
