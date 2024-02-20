@@ -1,10 +1,10 @@
-// const { Octokit } = require("@octokit/rest");
+const { Octokit } = require("@octokit/rest");
 const core = require("@actions/core");
 const config = require("./config");
 
-// const octokit = new Octokit({
-//   auth: process.env.GH_TOKEN, // cycle this token as it's leaked
-// });
+const octokit = new Octokit({
+  auth: process.env.GH_TOKEN, // cycle this token as it's leaked
+});
 
 function setOutput(summary, shareLink) {
   core.setOutput("summary", summary);
