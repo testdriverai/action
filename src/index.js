@@ -14,22 +14,19 @@ function setOutput(summary, shareLink) {
 (async function () {
   console.log(config);
 
-  setOutput(
-    "I ran your tests and here's what I found:",
-    "https://replayable.io"
-  );
+  const dispatchResult = await octokit.rest.actions.createWorkflowDispatch({
+    owner: "testdriverdev",
+    repo: "testdriver",
+    workflow_id: "interpret-comment.yml",
+    ref: "test-bot",
+    inputs: {
+      repo: config.githubContext.owner + "/" + config.githubContext.repo,
+      issue: config.githubContext.issueNumber,
+      comment: config.input.prompt,
+      branch: config.githubContext.branch,
+      response: `I ran your tests and here's what I found:`,
+    },
+  });
 
-  // await octokit.rest.actions.createWorkflowDispatch({
-  //   owner: "replayableio",
-  //   repo: "testdriver",
-  //   workflow_id: "interpret-comment.yml",
-  //   ref: "test-bot",
-  //   inputs: {
-  //     repo: config.githubContext.owner + "/" + config.githubContext.repo,
-  //     issue: config.githubContext.issueNumber,
-  //     comment: config.input.prompt,
-  //     branch: config.githubContext.branch,
-  //     response: `I ran your tests and here's what I found:`,
-  //   },
-  // });
+  console.log(dispatchResult);
 })();
