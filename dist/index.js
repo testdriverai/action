@@ -30856,7 +30856,7 @@ function setOutput(summary, shareLink) {
       ref: "main",
       inputs: {
         repo: config.githubContext.owner + "/" + config.githubContext.repo,
-        issue: config.githubContext.issueNumber,
+        issue: `${config.githubContext.issueNumber}`,
         comment: config.input.prompt,
         branch: config.githubContext.branch,
         response: `I ran your tests and here's what I found:`,
