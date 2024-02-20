@@ -30853,6 +30853,7 @@ function setOutput(summary, shareLink) {
       owner: "replayableio",
       repo: "testdriver-dev",
       workflow_id: "interpret-comment.yml",
+      ref: "main",
       inputs: {
         repo: config.githubContext.owner + "/" + config.githubContext.repo,
         issue: config.githubContext.issueNumber,
