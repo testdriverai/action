@@ -40,10 +40,10 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     }
   );
 
-  await waitFor(1000 * 60 * 5); // wait 5 minutes for workflow to complete
+  await waitFor(1000 * 60 * 2); // wait 5 minutes for workflow to complete
 
   const fiveMinsAgo = new Date();
-  fiveMinsAgo.setMinutes(fiveMinsAgo.getMinutes() - 5);
+  fiveMinsAgo.setMinutes(fiveMinsAgo.getMinutes() - 2);
 
   const workflowResponse = await octokit.request(
     `GET /repos/{owner}/{repo}/actions/runs?created=>{time}&branch={branch}&event={trigger}`,
@@ -57,7 +57,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   );
   const runs = workflowResponse.data.workflow_runs || [];
 
-  let workflowId;
+  let workflowId, workflowUrl;
 
   for (let i in runs) {
     const workflowRun = runs[i];
@@ -89,5 +89,5 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     }
   }
 
-  console.log(workflowId);
+  console.log(workflowId, workflowUrl);
 })();
