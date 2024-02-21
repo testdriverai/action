@@ -32485,7 +32485,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   };
 
   let checkTimes = 0;
-  checkStatus();
+  await checkStatus();
   const intervalId = setInterval(() => {
     checkStatus();
     checkTimes++;
