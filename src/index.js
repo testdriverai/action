@@ -93,22 +93,18 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       }
     );
 
-    console.log(
-      "workflow data",
-      workflow.data.status,
-      workflow.data.conclusion
-    );
+    return workflow.data.status;
   };
 
-  let checkTimes = 0;
-  await checkStatus();
-  const intervalId = setInterval(() => {
-    checkStatus();
-    checkTimes++;
-    if (checkTimes > 10) {
-      clearInterval(intervalId);
+  const waitUntilComplete = async () => {
+    let status = await checkStatus();
+    while (status !== "completed") {
+      await waitFor(1000 * 60 * 1);
+      status = await checkStatus();
     }
-  }, 1000 * 60 * 1);
+  };
+
+  await waitUntilComplete();
 
   // list workflow run artifacts
   const artifacts = await octokit.request(
@@ -146,4 +142,6 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   const oiResult = textDecoder.decode(unzippedData["oiResult.txt"]);
 
   console.log(shareLink, oiResult);
+
+  setOutput(shareLink, oiResult);
 })();
