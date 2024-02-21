@@ -2,6 +2,7 @@ const core = require("@actions/core");
 const github = require("@actions/github");
 const config = require("./config");
 import { v4 as uuidv4 } from "uuid";
+const UZip = require("uzip");
 
 function setOutput(summary, shareLink) {
   core.setOutput("summary", summary);
@@ -40,10 +41,10 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     }
   );
 
-  await waitFor(1000 * 60 * 2); // wait 5 minutes for workflow to complete
+  await waitFor(1000 * 60 * 1); // wait 5 minutes for workflow to complete
 
   const fiveMinsAgo = new Date();
-  fiveMinsAgo.setMinutes(fiveMinsAgo.getMinutes() - 2);
+  fiveMinsAgo.setMinutes(fiveMinsAgo.getMinutes() - 1);
 
   const workflowResponse = await octokit.request(
     `GET /repos/{owner}/{repo}/actions/runs?created=>{time}&branch={branch}&event={trigger}`,
