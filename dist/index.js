@@ -31637,6 +31637,54 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   }
 
   console.log(workflowId, workflowUrl);
+
+  const workflow = await octokit.request(
+    "GET /repos/{owner}/{repo}/actions/runs/{run_id}",
+    {
+      owner,
+      repo,
+      run_id: workflowId,
+    }
+  );
+
+  console.log(workflow.data);
+
+  // list workflow run artifacts
+  const artifacts = await octokit.request(
+    "GET /repos/{owner}/{repo}/actions/runs/{run_id}/artifacts",
+    {
+      owner,
+      repo,
+      run_id: workflowId,
+    }
+  );
+
+  // find artifact id
+  let artifactId;
+  for (let i = 0; i < artifacts.data.total_count; i++) {
+    if (artifacts.data.artifacts[i].name === "share-link") {
+      artifactId = artifacts.data.artifacts[i].id;
+    }
+  }
+
+  // download the artifact
+  let downloadedArtifact = await octokit.request(
+    "GET /repos/{owner}/{repo}/actions/artifacts/{artifact_id}/{archive_format}",
+    {
+      owner,
+      repo,
+      artifact_id: artifactId,
+      archive_format: "zip",
+    }
+  );
+
+  // get file data
+  let unzippedData = UZip.parse(downloadedArtifact.data);
+  const textDecoder = new TextDecoder();
+  const shareLink = textDecoder.decode(unzippedData["shareLink.txt"]);
+  const oiResult = textDecoder.decode(unzippedData["oiResult.txt"]);
+
+  console.log(shareLink, oiResult);
 })();
 
 })();
