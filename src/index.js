@@ -17,8 +17,6 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   const branch = "main";
   const dispatchWorkflow = "interpret-comment.yml";
 
-  console.log(config, process.env.GH_TOKEN);
-
   const octokit = github.getOctokit(process.env.GH_TOKEN);
 
   const dispatchId = uuidv4();
@@ -32,11 +30,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       ref: branch,
       inputs: {
         dispatchId,
-        repo: config.githubContext.owner + "/" + config.githubContext.repo,
-        issue: `${config.githubContext.issueNumber}`,
         comment: config.input.prompt,
-        branch: config.githubContext.branch,
-        response: `I ran your tests and here's what I found:`,
       },
     }
   );
@@ -58,7 +52,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   );
   const runs = workflowResponse.data.workflow_runs || [];
 
-  let workflowId, workflowUrl;
+  let workflowId;
 
   for (let i in runs) {
     const workflowRun = runs[i];
@@ -78,7 +72,6 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
         //  dispatch id then capture workflow details and break
         if (steps[1].name == dispatchId) {
           workflowId = job.run_id;
-          workflowUrl = workflowRun.html_url;
           break;
         }
       }
@@ -90,8 +83,6 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     }
   }
 
-  console.log(workflowId, workflowUrl);
-
   const workflow = await octokit.request(
     "GET /repos/{owner}/{repo}/actions/runs/{run_id}",
     {
@@ -100,8 +91,6 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       run_id: workflowId,
     }
   );
-
-  console.log(workflow.data);
 
   // list workflow run artifacts
   const artifacts = await octokit.request(
