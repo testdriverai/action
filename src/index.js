@@ -83,14 +83,32 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     }
   }
 
-  const workflow = await octokit.request(
-    "GET /repos/{owner}/{repo}/actions/runs/{run_id}",
-    {
-      owner,
-      repo,
-      run_id: workflowId,
+  const checkStatus = async () => {
+    const workflow = await octokit.request(
+      "GET /repos/{owner}/{repo}/actions/runs/{run_id}",
+      {
+        owner,
+        repo,
+        run_id: workflowId,
+      }
+    );
+
+    console.log(
+      "workflow data",
+      workflow.data.status,
+      workflow.data.conclusion
+    );
+  };
+
+  let checkTimes = 0;
+  checkStatus();
+  const intervalId = setInterval(() => {
+    checkStatus();
+    checkTimes++;
+    if (checkTimes > 10) {
+      clearInterval(intervalId);
     }
-  );
+  }, 1000 * 60 * 1);
 
   // list workflow run artifacts
   const artifacts = await octokit.request(
