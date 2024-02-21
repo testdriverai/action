@@ -12,6 +12,9 @@ jobs:
         uses: actions/checkout@v3
       - uses: ./
         with:
-          prompt: Hello, world!
+          prompt: |
+            1. open youtube.
+            2. find a cat video
+            3. quit the browser
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
