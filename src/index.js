@@ -109,8 +109,6 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       }
     );
 
-    console.log(workflow.data.status, workflow.data.conclusion);
-
     return {
       status: workflow.data.status,
       conclusion: workflow.data.conclusion,
@@ -119,9 +117,11 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 
   const waitUntilComplete = async () => {
     let { status, conclusion } = await checkStatus();
-    while (status !== "completed") {
+    while (status != "completed") {
       await waitFor(1000 * 60 * 1);
-      status = await checkStatus();
+      const resp = await checkStatus();
+      status = resp.status;
+      conclusion = resp.conclusion;
     }
 
     return conclusion;
