@@ -32422,7 +32422,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 
   const findWorkFlow = async () => {
     const twoMinutesAgo = new Date();
-    twoMinutesAgo.setMinutes(oneMinuteAgo.getMinutes() - 2);
+    twoMinutesAgo.setMinutes(twoMinutesAgo.getMinutes() - 2);
 
     const workflowResponse = await octokit.request(
       `GET /repos/{owner}/{repo}/actions/runs?created=>{time}&branch={branch}&event={trigger}`,
