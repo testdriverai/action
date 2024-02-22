@@ -32421,16 +32421,16 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   );
 
   const findWorkFlow = async () => {
-    const oneMinuteAgo = new Date();
-    oneMinuteAgo.setMinutes(oneMinuteAgo.getMinutes() - 1);
+    const twoMinutesAgo = new Date();
+    twoMinutesAgo.setMinutes(oneMinuteAgo.getMinutes() - 2);
 
     const workflowResponse = await octokit.request(
       `GET /repos/{owner}/{repo}/actions/runs?created=>{time}&branch={branch}&event={trigger}`,
       {
         owner,
         repo,
-        // Can just check dispatches in the past 1 minutes since we poll every 1 minute
-        time: oneMinuteAgo.toISOString(),
+        // Can just check dispatches in the past 2 minutes since we poll every 1 minute
+        time: twoMinutesAgo.toISOString(),
         branch,
         trigger: "workflow_dispatch",
       }
@@ -32472,7 +32472,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   const waitUntilWorkflowAvailable = async () => {
     let workflowId = await findWorkFlow();
     while (!workflowId) {
-      await waitFor(1000 * 60 * 1);
+      await waitFor(1000 * 60);
       workflowId = await findWorkFlow();
     }
 
