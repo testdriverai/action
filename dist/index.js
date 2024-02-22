@@ -32470,7 +32470,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   };
 
   const waitUntilWorkflowAvailable = async () => {
-    let workflowId = await findWorkFlow();
+    let workflowId;
     while (!workflowId) {
       await waitFor(1000 * 60);
       workflowId = await findWorkFlow();
@@ -32480,6 +32480,8 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   };
 
   const workflowId = await waitUntilWorkflowAvailable();
+
+  console.log("workflow found", workflowId);
 
   const checkStatus = async () => {
     const workflow = await octokit.request(
@@ -32508,6 +32510,8 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   };
 
   const conclusion = await waitUntilComplete();
+
+  console.log("completed with ", conclusion);
 
   // list workflow run artifacts
   const artifacts = await octokit.request(
