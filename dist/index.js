@@ -32493,6 +32493,8 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       }
     );
 
+    console.log(workflow.data.status, workflow.data.conclusion);
+
     return {
       status: workflow.data.status,
       conclusion: workflow.data.conclusion,
