@@ -32388,9 +32388,10 @@ const config = __nccwpck_require__(4570);
 
 const UZip = __nccwpck_require__(8222);
 
-function setOutput(summary, shareLink) {
+function setOutput(summary, shareLink, conclusion) {
   core.setOutput("summary", summary);
   core.setOutput("share-link", shareLink);
+  core.setOutput("conclusion", conclusion);
 }
 
 const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -32419,53 +32420,66 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     }
   );
 
-  await waitFor(1000 * 60 * 1); // wait 5 minutes for workflow to complete
+  const findWorkFlow = async () => {
+    const oneMinuteAgo = new Date();
+    oneMinuteAgo.setMinutes(oneMinuteAgo.getMinutes() - 1);
 
-  const fiveMinsAgo = new Date();
-  fiveMinsAgo.setMinutes(fiveMinsAgo.getMinutes() - 1);
+    const workflowResponse = await octokit.request(
+      `GET /repos/{owner}/{repo}/actions/runs?created=>{time}&branch={branch}&event={trigger}`,
+      {
+        owner,
+        repo,
+        // Can just check dispatches in the past 1 minutes since we poll every 1 minute
+        time: oneMinuteAgo.toISOString(),
+        branch,
+        trigger: "workflow_dispatch",
+      }
+    );
+    const runs = workflowResponse.data.workflow_runs || [];
 
-  const workflowResponse = await octokit.request(
-    `GET /repos/{owner}/{repo}/actions/runs?created=>{time}&branch={branch}&event={trigger}`,
-    {
-      owner,
-      repo,
-      time: fiveMinsAgo.toISOString(),
-      branch,
-      trigger: "workflow_dispatch",
-    }
-  );
-  const runs = workflowResponse.data.workflow_runs || [];
+    let workflowId;
 
-  let workflowId;
+    for (let i in runs) {
+      const workflowRun = runs[i];
 
-  for (let i in runs) {
-    const workflowRun = runs[i];
+      // fetch jobs for the workflow run
+      const jobsUrl = new URL(workflowRun.jobs_url);
+      const response = await octokit.request(`GET ${jobsUrl.pathname}`);
+      const jobs = response.data.jobs || [];
 
-    // fetch jobs for the workflow run
-    const jobsUrl = new URL(workflowRun.jobs_url);
-    const response = await octokit.request(`GET ${jobsUrl.pathname}`);
-    const jobs = response.data.jobs || [];
+      // iterate over jobs within workflow run
+      for (let j in jobs) {
+        const job = jobs[j];
+        const steps = job.steps;
 
-    // iterate over jobs within workflow run
-    for (let j in jobs) {
-      const job = jobs[j];
-      const steps = job.steps;
-
-      if (steps.length > 1) {
-        // if after setup phase is a step that contains our
-        //  dispatch id then capture workflow details and break
-        if (steps[1].name == dispatchId) {
-          workflowId = job.run_id;
-          break;
+        if (steps.length > 1) {
+          // if after setup phase is a step that contains our
+          //  dispatch id then capture workflow details and break
+          if (steps[1].name == dispatchId) {
+            workflowId = job.run_id;
+            break;
+          }
         }
       }
+
+      // break iteration of workflow runs if workflow id found
+      if (workflowId) {
+        return workflowId;
+      }
+    }
+  };
+
+  const waitUntilWorkflowAvailable = async () => {
+    let workflowId = await findWorkFlow();
+    while (!workflowId) {
+      await waitFor(1000 * 60 * 1);
+      workflowId = await findWorkFlow();
     }
 
-    // break iteration of workflow runs if workflow id found
-    if (workflowId) {
-      break;
-    }
-  }
+    return workflowId;
+  };
+
+  const workflowId = await waitUntilWorkflowAvailable();
 
   const checkStatus = async () => {
     const workflow = await octokit.request(
@@ -32477,18 +32491,23 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       }
     );
 
-    return workflow.data.status;
+    return {
+      status: workflow.data.status,
+      conclusion: workflow.data.conclusion,
+    };
   };
 
   const waitUntilComplete = async () => {
-    let status = await checkStatus();
+    let { status, conclusion } = await checkStatus();
     while (status !== "completed") {
       await waitFor(1000 * 60 * 1);
       status = await checkStatus();
     }
+
+    return conclusion;
   };
 
-  await waitUntilComplete();
+  const conclusion = await waitUntilComplete();
 
   // list workflow run artifacts
   const artifacts = await octokit.request(
@@ -32525,9 +32544,9 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   const shareLink = textDecoder.decode(unzippedData["shareLink.txt"]);
   const oiResult = textDecoder.decode(unzippedData["oiResult.txt"]);
 
-  console.log(shareLink, oiResult);
+  console.log(shareLink, oiResult, conclusion);
 
-  setOutput(shareLink, oiResult);
+  setOutput(shareLink, oiResult, conclusion);
 })();
 
 })();
