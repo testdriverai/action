@@ -34,7 +34,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
         branch: config.githubContext.branch,
         dispatchId,
         comment: config.input.prompt,
-        isFromAction: true,
+        isFromAction: "true",
       },
     }
   );
