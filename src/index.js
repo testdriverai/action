@@ -172,5 +172,6 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     core.setFailed(oiResult);
   }
 
+  console.log(shareLink, oiResult, conclusion);
   setOutput(shareLink, oiResult, conclusion);
 })();
