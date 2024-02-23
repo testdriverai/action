@@ -32398,8 +32398,8 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 
 (async function () {
   const owner = "replayableio";
-  const repo = "testdriver-dev";
-  const branch = "main";
+  const repo = "testdriver";
+  const branch = "michael/flag-based-action-or-bot";
   const dispatchWorkflow = "interpret-comment.yml";
 
   const octokit = github.getOctokit(process.env.GH_TOKEN);
@@ -32414,8 +32414,11 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       workflow_id: dispatchWorkflow,
       ref: branch,
       inputs: {
+        repo: config.input.owner + "/" + config.input.repo,
+        branch: config.input.branch,
         dispatchId,
         comment: config.input.prompt,
+        isFromAction: true,
       },
     }
   );
