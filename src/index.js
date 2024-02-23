@@ -166,7 +166,11 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   const shareLink = textDecoder.decode(unzippedData["shareLink.txt"]);
   const oiResult = textDecoder.decode(unzippedData["oiResult.txt"]);
 
-  console.log(shareLink, oiResult, conclusion);
+  const isPassed = oiResult.includes("The test passed");
+
+  if (!isPassed) {
+    core.setFailed(oiResult);
+  }
 
   setOutput(shareLink, oiResult, conclusion);
 })();
