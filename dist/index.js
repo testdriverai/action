@@ -32414,8 +32414,8 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       workflow_id: dispatchWorkflow,
       ref: branch,
       inputs: {
-        repo: config.input.owner + "/" + config.input.repo,
-        branch: config.input.branch,
+        repo: config.githubContext.owner + "/" + config.githubContext.repo,
+        branch: config.githubContext.branch,
         dispatchId,
         comment: config.input.prompt,
         isFromAction: true,
