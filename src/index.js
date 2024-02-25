@@ -7,7 +7,7 @@ const colors = require("colors");
 
 function extractLink(markdownString) {
   const regex = /\[!\[.*?\]\(.*?\)\]\((.*?)\)/;
-  const match = markdown.match(regex);
+  const match = markdownString.match(regex);
   return match[1];
 }
 
