@@ -27,7 +27,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 
 (async function () {
   const owner = "replayableio";
-  const repo = "testdriver-dev";
+  const repo = "testdriver";
   const branch = "main";
   const dispatchWorkflow = "interpret-comment.yml";
 
@@ -46,8 +46,11 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       workflow_id: dispatchWorkflow,
       ref: branch,
       inputs: {
+        repo: config.githubContext.owner + "/" + config.githubContext.repo,
+        branch: config.githubContext.branch,
         dispatchId,
         comment: config.input.prompt,
+        isFromAction: "true",
       },
     }
   );
