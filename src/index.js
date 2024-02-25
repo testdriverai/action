@@ -3,11 +3,24 @@ const github = require("@actions/github");
 const config = require("./config");
 import { v4 as uuidv4 } from "uuid";
 const UZip = require("uzip");
+const colors = require("colors");
 
 function setOutput(summary, shareLink, conclusion) {
   core.setOutput("summary", summary);
   core.setOutput("share-link", shareLink);
   core.setOutput("conclusion", conclusion);
+}
+
+function extractLink(markdownString) {
+  const regex = /\[.*?\]\((.*?)\)/g;
+  const urls = [];
+  let match;
+
+  while ((match = regex.exec(markdownString)) !== null) {
+    urls.push(match[1]);
+  }
+
+  return urls;
 }
 
 const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -21,6 +34,9 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   const octokit = github.getOctokit(process.env.GH_TOKEN);
 
   const dispatchId = uuidv4();
+
+  console.log('TestDriver: "I can help ya test that!"'.green);
+  console.log('TestDriver: "Looking into it..."'.green);
 
   await octokit.request(
     "POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches",
@@ -89,15 +105,21 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     let workflowId;
     while (!workflowId) {
       await waitFor(1000 * 60);
+      console.log('TestDriver: "Setting Up..."'.green);
       workflowId = await findWorkFlow();
     }
 
     return workflowId;
   };
 
+  console.log('TestDriver: "I\'m workin on it!"'.green);
+
   const workflowId = await waitUntilWorkflowAvailable();
 
-  console.log("workflow found", workflowId);
+  console.log(
+    'TestDriver: "I\'m all set up and ready to take this thing for a drive!"'
+      .green
+  );
 
   const checkStatus = async () => {
     const workflow = await octokit.request(
@@ -115,10 +137,13 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     };
   };
 
+  console.log('TestDriver: "Let\'s Go!"'.green);
+
   const waitUntilComplete = async () => {
     let { status, conclusion } = await checkStatus();
     while (status != "completed") {
       await waitFor(1000 * 60 * 1);
+      console.log('TestDriver: "Testing..."'.green);
       const resp = await checkStatus();
       status = resp.status;
       conclusion = resp.conclusion;
@@ -129,7 +154,9 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 
   const conclusion = await waitUntilComplete();
 
-  console.log("completed with ", conclusion);
+  console.log('TestDriver: "Done!"'.green);
+
+  console.log('TestDriver: "Writing my report..."'.green);
 
   // list workflow run artifacts
   const artifacts = await octokit.request(
@@ -149,6 +176,8 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     }
   }
 
+  console.log('TestDriver: "Interpreting results..."'.green);
+
   // download the artifact
   let downloadedArtifact = await octokit.request(
     "GET /repos/{owner}/{repo}/actions/artifacts/{artifact_id}/{archive_format}",
@@ -159,6 +188,8 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       archive_format: "zip",
     }
   );
+
+  console.log('TestDriver: "Decoding..."'.green);
 
   // get file data
   let unzippedData = UZip.parse(downloadedArtifact.data);
@@ -172,6 +203,15 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     core.setFailed(oiResult);
   }
 
-  console.log(shareLink, oiResult, conclusion);
-  setOutput(shareLink, oiResult, conclusion);
+  if (isPassed) {
+    console.log('TestDriver: "PASS"'.green);
+  } else {
+    console.log('TestDriver: "FAIL"'.red);
+  }
+
+  console.log("View Test Results on Dashcam.io".yellow);
+  console.log(extractLink(shareLink));
+
+  console.log("TestDriver.ai Summary".yellow);
+  console.log(oiResult);
 })();
