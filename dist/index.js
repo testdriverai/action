@@ -32399,7 +32399,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 (async function () {
   const owner = "replayableio";
   const repo = "testdriver";
-  const branch = "michael/flag-based-action-or-bot";
+  const branch = "main";
   const dispatchWorkflow = "interpret-comment.yml";
 
   const octokit = github.getOctokit(process.env.GH_TOKEN);
