@@ -215,4 +215,14 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   core.setOutput("summary", oiResult);
   core.setOutput("link", extractLink(shareLink));
   core.setOutput("markdown", shareLink);
+
+  await core.summary
+    .addHeading("TestDriver.ai Results")
+    .addLink("View Dashcam.io Recording!", extractLink(shareLink))
+    .addHeading("Summary")
+    .addRaw(oiResult)
+    .addEOL()
+    .addRaw(shareLink)
+    .addEOL()
+    .write();
 })();
