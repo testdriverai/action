@@ -18,9 +18,12 @@ outputs:
   summary:
     description: >-
       The summary of the test result
-  shareLink:
+  link:
     description: >-
       The share link of Dashcam.io recording
+  markdown:
+    description: >-
+      A hotlinked image of the Dashcam.io recording
 runs:
   using: node16
   main: ./dist/index.js

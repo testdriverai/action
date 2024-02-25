@@ -5,12 +5,6 @@ import { v4 as uuidv4 } from "uuid";
 const UZip = require("uzip");
 const colors = require("colors");
 
-function setOutput(summary, shareLink, conclusion) {
-  core.setOutput("summary", summary);
-  core.setOutput("share-link", shareLink);
-  core.setOutput("conclusion", conclusion);
-}
-
 function extractLink(markdownString) {
   const regex = /\[.*?\]\((.*?)\)/g;
   const urls = [];
@@ -35,8 +29,8 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 
   const dispatchId = uuidv4();
 
-  console.log('TestDriver: "I can help ya test that!"'.green);
   console.log('TestDriver: "Looking into it..."'.green);
+  console.log('TestDriver: "I can help ya test that!"'.green);
 
   await octokit.request(
     "POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches",
@@ -217,4 +211,8 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 
   console.log("TestDriver.ai Summary".yellow);
   console.log(oiResult);
+
+  core.setOutput("summary", oiResult);
+  core.setOutput("link", extractLink(shareLink));
+  core.setOutput("markdown", shareLink);
 })();
