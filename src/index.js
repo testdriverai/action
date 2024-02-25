@@ -6,15 +6,9 @@ const UZip = require("uzip");
 const colors = require("colors");
 
 function extractLink(markdownString) {
-  const regex = /\[.*?\]\((.*?)\)/g;
-  const urls = [];
-  let match;
-
-  while ((match = regex.exec(markdownString)) !== null) {
-    urls.push(match[1]);
-  }
-
-  return urls;
+  const regex = /\[!\[.*?\]\(.*?\)\]\((.*?)\)/;
+  const match = markdown.match(regex);
+  return match[1];
 }
 
 const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
