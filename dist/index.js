@@ -33345,22 +33345,10 @@ const config = __nccwpck_require__(4570);
 const UZip = __nccwpck_require__(8222);
 const colors = __nccwpck_require__(3045);
 
-function setOutput(summary, shareLink, conclusion) {
-  core.setOutput("summary", summary);
-  core.setOutput("share-link", shareLink);
-  core.setOutput("conclusion", conclusion);
-}
-
 function extractLink(markdownString) {
-  const regex = /\[.*?\]\((.*?)\)/g;
-  const urls = [];
-  let match;
-
-  while ((match = regex.exec(markdownString)) !== null) {
-    urls.push(match[1]);
-  }
-
-  return urls;
+  const regex = /\[!\[.*?\]\(.*?\)\]\((.*?)\)/;
+  const match = markdown.match(regex);
+  return match[1];
 }
 
 const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -33375,8 +33363,8 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 
   const dispatchId = v4();
 
-  console.log('TestDriver: "I can help ya test that!"'.green);
   console.log('TestDriver: "Looking into it..."'.green);
+  console.log('TestDriver: "I can help ya test that!"'.green);
 
   await octokit.request(
     "POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches",
@@ -33557,6 +33545,20 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 
   console.log("TestDriver.ai Summary".yellow);
   console.log(oiResult);
+
+  core.setOutput("summary", oiResult);
+  core.setOutput("link", extractLink(shareLink));
+  core.setOutput("markdown", shareLink);
+
+  await core.summary
+    .addHeading("TestDriver.ai Results")
+    .addLink("View Dashcam.io Recording!", extractLink(shareLink))
+    .addHeading("Summary")
+    .addRaw(oiResult)
+    .addEOL()
+    .addRaw(shareLink)
+    .addEOL()
+    .write();
 })();
 
 })();
