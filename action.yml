@@ -1,22 +1,29 @@
 name: Dashcam TestDriver
-description: Run tests based on human language
-author: Michael Layne
+description: AI QA Agent for GitHub
+author: Dashcam.io
 branding:
-  icon: "box"
-  color: "orange"
+  icon: "user-plus"
+  color: "green"
 inputs:
   prompt:
     description: >-
-      Your test prompt
+      The prompt to test. Example:
+      1. Open Google Chrome
+      2. Go to YouTube.com
+      3. Search for "Rick Astley"
+      4. Click on the first video
     required: true
 
 outputs:
   summary:
     description: >-
       The summary of the test result
-  shareLink:
+  link:
     description: >-
-      The share link of dash recording
+      The share link of Dashcam.io recording
+  markdown:
+    description: >-
+      A hotlinked image of the Dashcam.io recording
 runs:
   using: node16
   main: ./dist/index.js

@@ -1,11 +1,15 @@
 const core = require("@actions/core");
 const config = require("./config");
 const axios = require("axios");
+
 require("dotenv").config();
 
-function setOutput(summary, shareLink) {
-  core.setOutput("summary", summary);
-  core.setOutput("share-link", shareLink);
+const colors = require("colors");
+
+function extractLink(markdownString) {
+  const regex = /\[!\[.*?\]\(.*?\)\]\((.*?)\)/;
+  const match = markdownString.match(regex);
+  return match[1];
 }
 
 const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -13,7 +17,8 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 (async function () {
   const baseUrl =
     (process.env.IS_DEV
-      ? "https://replayable-dev-michael.ngrok.io"
+      ? // ? "https://replayable-dev-michael.ngrok.io"
+        "http://localhost:1337"
       : "https://replayable-api-production.herokuapp.com") + "/api/v1";
 
   const repo = process.env.IS_DEV
@@ -56,11 +61,14 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     return { status, conclusion };
   };
 
+  console.log('TestDriver: "Let\'s Go!"'.green);
+
   const waitUntilComplete = async () => {
     let { status, conclusion } = await checkStatus();
 
     while (status !== "completed") {
       await waitFor(1000 * 60 * 1);
+      console.log('TestDriver: "Testing..."'.green);
       const resp = await checkStatus();
       status = resp.status;
       conclusion = resp.conclusion;
@@ -71,7 +79,8 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 
   await waitUntilComplete();
 
-  console.log("workflow completed");
+  console.log('TestDriver: "Done!"'.green);
+  console.log('TestDriver: "Writing my report..."'.green);
 
   const {
     data: { shareLink, oiResult },
@@ -84,12 +93,37 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     }
   );
 
+  console.log('TestDriver: "Interpreting results..."'.green);
+
   const isPassed = oiResult.includes("The test passed");
 
   if (!isPassed) {
     core.setFailed(oiResult);
   }
 
-  console.log("results: ", shareLink, oiResult);
-  setOutput(shareLink, oiResult);
+  if (isPassed) {
+    console.log('TestDriver: "PASS"'.green);
+  } else {
+    console.log('TestDriver: "FAIL"'.red);
+  }
+
+  console.log("View Test Results on Dashcam.io".yellow);
+  console.log(extractLink(shareLink));
+
+  console.log("TestDriver.ai Summary".yellow);
+  console.log(oiResult);
+
+  core.setOutput("summary", oiResult);
+  core.setOutput("link", extractLink(shareLink));
+  core.setOutput("markdown", shareLink);
+
+  await core.summary
+    .addHeading("TestDriver.ai Results")
+    .addLink("View Dashcam.io Recording!", extractLink(shareLink))
+    .addHeading("Summary")
+    .addRaw(oiResult)
+    .addEOL()
+    .addRaw(shareLink)
+    .addEOL()
+    .write();
 })();
