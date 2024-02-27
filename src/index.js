@@ -25,7 +25,15 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     ? "replayableio/testdriver-action"
     : config.githubContext.owner + "/" + config.githubContext.repo;
   const branch = process.env.IS_DEV ? "main" : config.githubContext.branch;
-  const prompt = process.env.IS_DEV ? "open youtube" : config.input.prompt;
+
+  console.log('TestDriver: "Looking into it..."'.green);
+  console.log('TestDriver: "I can help ya test that!"'.green);
+
+  let prompt = process.env.IS_DEV
+    ? "open youtube"
+    : config.input.prompt.replace(/(\r\n|\n)/g, function (match) {
+        return match === "\n" ? "\\n" : "\\r\\n";
+      });
 
   const {
     data: { workflowId },
