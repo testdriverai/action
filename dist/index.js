@@ -38848,8 +38848,10 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 
   console.log("inputs", { repo, branch, prompt });
 
+  console.log('TestDriver: "Dispatching testdriver..."'.green);
+
   const {
-    data: { workflowId },
+    data: { dispatchId },
   } = await axios.post(
     `${baseUrl}/testdriver-dispatch`,
     {
@@ -38863,7 +38865,40 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     }
   );
 
-  console.log("workflow id:", workflowId);
+  console.log("dispatch id:", dispatchId);
+
+  console.log('TestDriver: "Finding the dispatched workflow..."'.green);
+
+  const checkWorkflow = async () => {
+    const {
+      data: { workflowId },
+    } = await axios.post(
+      `${baseUrl}/testdriver-workflow`,
+      {
+        dispatchId,
+      },
+      {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      }
+    );
+
+    return workflowId;
+  };
+
+  const waitUntilWorkflowAvailable = async () => {
+    let workflowId;
+    while (!workflowId) {
+      await waitFor(1000 * 60);
+      workflowId = await checkWorkflow();
+    }
+
+    return workflowId;
+  };
+
+  const workflowId = await waitUntilWorkflowAvailable();
+
+  console.log("Found workflow id:", workflowId);
 
   const checkStatus = async () => {
     const {
