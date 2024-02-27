@@ -26,6 +26,8 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   console.log('TestDriver: "Looking into it..."'.green);
   console.log('TestDriver: "I can help ya test that!"'.green);
 
+  console.log(config.input.prompt)
+
   await octokit.request(
     "POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches",
     {
