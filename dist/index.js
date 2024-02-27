@@ -33366,7 +33366,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   console.log('TestDriver: "Looking into it..."'.green);
   console.log('TestDriver: "I can help ya test that!"'.green);
 
-  let comment = config.input.comment.replace(/(\r\n|\n)/g, function (match) {
+  let comment = config.input.prompt.replace(/(\r\n|\n)/g, function (match) {
     return match === "\n" ? "\\n" : "\\r\\n";
   });
 
