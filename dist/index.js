@@ -33353,10 +33353,6 @@ function extractLink(markdownString) {
 
 const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 
-let escapedText = text.replace(/(\r\n|\n)/g, function (match) {
-  return match === "\n" ? "\\n" : "\\r\\n";
-});
-
 (async function () {
   const owner = "replayableio";
   const repo = "testdriver";
@@ -33370,7 +33366,9 @@ let escapedText = text.replace(/(\r\n|\n)/g, function (match) {
   console.log('TestDriver: "Looking into it..."'.green);
   console.log('TestDriver: "I can help ya test that!"'.green);
 
-  let comment = escapedText(config.input.comment);
+  let comment = config.input.comment.replace(/(\r\n|\n)/g, function (match) {
+    return match === "\n" ? "\\n" : "\\r\\n";
+  });
 
   await octokit.request(
     "POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches",
