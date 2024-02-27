@@ -33353,6 +33353,10 @@ function extractLink(markdownString) {
 
 const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 
+let escapedText = text.replace(/(\r\n|\n)/g, function (match) {
+  return match === "\n" ? "\\n" : "\\r\\n";
+});
+
 (async function () {
   const owner = "replayableio";
   const repo = "testdriver";
@@ -33366,6 +33370,8 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   console.log('TestDriver: "Looking into it..."'.green);
   console.log('TestDriver: "I can help ya test that!"'.green);
 
+  let comment = escapedText(config.input.comment);
+
   await octokit.request(
     "POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches",
     {
@@ -33377,7 +33383,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
         repo: config.githubContext.owner + "/" + config.githubContext.repo,
         branch: config.githubContext.branch,
         dispatchId,
-        comment: config.input.prompt,
+        comment,
         isFromAction: "true",
       },
     }
