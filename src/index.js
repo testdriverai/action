@@ -35,6 +35,8 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
         return match === "\n" ? "\\n" : "\\r\\n";
       });
 
+  console.log("inputs", { repo, branch, prompt });
+
   const {
     data: { workflowId },
   } = await axios.post(
