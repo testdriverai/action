@@ -1,4 +1,4 @@
-name: PR automations
+name: Test PR
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review, labeled, unlabeled]
@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - uses: replayableio/testdriver-action
+      - uses: dashcamio/testdriver
         with:
           prompt: |
             1. open youtube.
