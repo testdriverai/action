@@ -38,14 +38,16 @@ Manual testing is reptitive and slow. Automated tests take siginifigant investme
  
 # How
 
+TestDriver is a productized infrastructure pipeline created by [Dashcam.io](https://dashcam.io). In short, this is how it works:
+
 1. Spawn a Mac1 VM
 2. Clone your repository (optional)
 4. Runs `prerun.sh`
 5. Spawns AI Agent with prompt
-  6. Reads step
-  7. Looks at screen, reads text and describes images
-  8. Determines what actions it needs to take to reach goal of prompt step
-  9. Executes actions
+6. Reads step
+7. Looks at screen, reads text and describes images
+8. Determines what actions it needs to take to reach goal of prompt step
+9. Executes actions
 10. Agent summarizes results
 
 # Example Workflow
