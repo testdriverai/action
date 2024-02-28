@@ -131,5 +131,3 @@ scripthaus run electron 1>/dev/null 2>&1 &
 echo "Electron Done"
 exit
 ```
-
-`.testdriver/prerun.sh`
