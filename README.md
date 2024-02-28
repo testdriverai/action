@@ -10,8 +10,6 @@ https://github.com/dashcamio/testdriver/assets/318295/d325f048-e6ad-44f3-b04d-9f
 
 # Why
 
-<img src="https://github.com/dashcamio/testdriver/assets/318295/e55d0ee4-1c22-40a5-b30b-cc7d155defcd" height="300" />
-
 Manual testing is reptitive and slow. Automated tests take siginifigant investment time and need to be maintained. The TestDriver QA Agent can test your app with natural language prompts and AI vision, which is quicker to set up and more resiliant to changes.
 
 - No code or frameworks to invest in
