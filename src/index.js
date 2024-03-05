@@ -180,7 +180,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   await core.summary
 
     .addHeading("TestDriver.ai Results")
-    .addLink("View Dashcam.io Recording!mMarkdown", extractedFro)
+    .addLink("View Dashcam.io Recording!mMarkdown", extractedFromMarkdown)
     .addHeading("Summary")
     .addRaw(oiResult)
     .addEOL()
