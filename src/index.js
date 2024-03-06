@@ -133,7 +133,6 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   await waitUntilComplete();
 
   console.log('TestDriver: "Done!"'.green);
-  console.log('TestDriver: "Writing my report..."'.green);
 
   const makeArtifactRequest = axios.post(
       `${baseUrl}/testdriver-artifacts`,
@@ -148,7 +147,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   let attempts = 0;
   const getArtifacts = async () => {
     
-      console.log('TestDriver: "Testing..."'.green);
+      console.log('TestDriver: "Getting Results..."'.green);
       try {
         ({shareLink, oiResult}) = await makeArtifactRequest;
         console.log(shareLink, oiResult)
@@ -163,7 +162,8 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
         }
       }
       
-  });
+  };
+  console.log('TestDriver: "Writing my report..."'.green);
 
   await getArtifacts();
 
