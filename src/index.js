@@ -135,10 +135,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   console.log('TestDriver: "Done!"'.green);
   console.log('TestDriver: "Writing my report..."'.green);
 
-  const makeArtifactRequest = async () => {
-    const {
-      data: { shareLink, oiResult },
-    } = await axios.post(
+  const makeArtifactRequest = axios.post(
       `${baseUrl}/testdriver-artifacts`,
       { workflowId },
       {
@@ -146,8 +143,6 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
         "Content-Type": "application/json",
       }
     );
-    resolve({ shareLink, oiResult });
-  };
 
   let shareLink, oiResult;
   let attempts = 0;
