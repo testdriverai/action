@@ -135,16 +135,42 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   console.log('TestDriver: "Done!"'.green);
   console.log('TestDriver: "Writing my report..."'.green);
 
-  const {
-    data: { shareLink, oiResult },
-  } = await axios.post(
-    `${baseUrl}/testdriver-artifacts`,
-    { workflowId },
-    {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    }
-  );
+  const makeArtifactRequest = async () => {
+    const {
+      data: { shareLink, oiResult },
+    } = await axios.post(
+      `${baseUrl}/testdriver-artifacts`,
+      { workflowId },
+      {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      }
+    );
+    resolve({ shareLink, oiResult });
+  };
+
+  let shareLink, oiResult;
+  let attempts = 0;
+  const getArtifacts = async () => {
+    
+      console.log('TestDriver: "Testing..."'.green);
+      try {
+        ({shareLink, oiResult}) = await makeArtifactRequest;
+        console.log(shareLink, oiResult)
+      } catch (e) { 
+        console.log(e)
+        if (e && attempts < 10) {
+          attempts++;
+          await waitFor(1000 * 60 * 1);
+          await getArtifacts();
+        } else {
+          throw new Error("Failed to get artifacts");
+        }
+      }
+      
+  });
+
+  await getArtifacts();
 
   console.log('TestDriver: "Interpreting results..."'.green);
 
