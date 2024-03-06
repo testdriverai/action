@@ -3563,7 +3563,7 @@ __export(dist_src_exports, {
 module.exports = __toCommonJS(dist_src_exports);
 
 // pkg/dist-src/version.js
-var VERSION = "9.1.5";
+var VERSION = "9.2.0";
 
 // pkg/dist-src/normalize-paginated-list-response.js
 function normalizePaginatedListResponse(response) {
@@ -3724,6 +3724,8 @@ var paginatingEndpoints = [
   "GET /orgs/{org}/members/{username}/codespaces",
   "GET /orgs/{org}/migrations",
   "GET /orgs/{org}/migrations/{migration_id}/repositories",
+  "GET /orgs/{org}/organization-roles/{role_id}/teams",
+  "GET /orgs/{org}/organization-roles/{role_id}/users",
   "GET /orgs/{org}/outside_collaborators",
   "GET /orgs/{org}/packages",
   "GET /orgs/{org}/packages/{package_type}/{package_name}/versions",
@@ -3960,7 +3962,7 @@ __export(dist_src_exports, {
 module.exports = __toCommonJS(dist_src_exports);
 
 // pkg/dist-src/version.js
-var VERSION = "10.2.0";
+var VERSION = "10.4.0";
 
 // pkg/dist-src/generated/endpoints.js
 var Endpoints = {
@@ -4087,6 +4089,9 @@ var Endpoints = {
       "GET /repos/{owner}/{repo}/actions/permissions/selected-actions"
     ],
     getArtifact: ["GET /repos/{owner}/{repo}/actions/artifacts/{artifact_id}"],
+    getCustomOidcSubClaimForRepo: [
+      "GET /repos/{owner}/{repo}/actions/oidc/customization/sub"
+    ],
     getEnvironmentPublicKey: [
       "GET /repositories/{repository_id}/environments/{environment_name}/secrets/public-key"
     ],
@@ -4239,6 +4244,9 @@ var Endpoints = {
     setCustomLabelsForSelfHostedRunnerForRepo: [
       "PUT /repos/{owner}/{repo}/actions/runners/{runner_id}/labels"
     ],
+    setCustomOidcSubClaimForRepo: [
+      "PUT /repos/{owner}/{repo}/actions/oidc/customization/sub"
+    ],
     setGithubActionsDefaultWorkflowPermissionsOrganization: [
       "PUT /orgs/{org}/actions/permissions/workflow"
     ],
@@ -4308,6 +4316,7 @@ var Endpoints = {
     listWatchersForRepo: ["GET /repos/{owner}/{repo}/subscribers"],
     markNotificationsAsRead: ["PUT /notifications"],
     markRepoNotificationsAsRead: ["PUT /repos/{owner}/{repo}/notifications"],
+    markThreadAsDone: ["DELETE /notifications/threads/{thread_id}"],
     markThreadAsRead: ["PATCH /notifications/threads/{thread_id}"],
     setRepoSubscription: ["PUT /repos/{owner}/{repo}/subscription"],
     setThreadSubscription: [
@@ -4584,10 +4593,10 @@ var Endpoints = {
     updateForAuthenticatedUser: ["PATCH /user/codespaces/{codespace_name}"]
   },
   copilot: {
-    addCopilotForBusinessSeatsForTeams: [
+    addCopilotSeatsForTeams: [
       "POST /orgs/{org}/copilot/billing/selected_teams"
     ],
-    addCopilotForBusinessSeatsForUsers: [
+    addCopilotSeatsForUsers: [
       "POST /orgs/{org}/copilot/billing/selected_users"
     ],
     cancelCopilotSeatAssignmentForTeams: [
@@ -4900,9 +4909,23 @@ var Endpoints = {
       }
     ]
   },
+  oidc: {
+    getOidcCustomSubTemplateForOrg: [
+      "GET /orgs/{org}/actions/oidc/customization/sub"
+    ],
+    updateOidcCustomSubTemplateForOrg: [
+      "PUT /orgs/{org}/actions/oidc/customization/sub"
+    ]
+  },
   orgs: {
     addSecurityManagerTeam: [
       "PUT /orgs/{org}/security-managers/teams/{team_slug}"
+    ],
+    assignTeamToOrgRole: [
+      "PUT /orgs/{org}/organization-roles/teams/{team_slug}/{role_id}"
+    ],
+    assignUserToOrgRole: [
+      "PUT /orgs/{org}/organization-roles/users/{username}/{role_id}"
     ],
     blockUser: ["PUT /orgs/{org}/blocks/{username}"],
     cancelInvitation: ["DELETE /orgs/{org}/invitations/{invitation_id}"],
@@ -4912,6 +4935,7 @@ var Endpoints = {
     convertMemberToOutsideCollaborator: [
       "PUT /orgs/{org}/outside_collaborators/{username}"
     ],
+    createCustomOrganizationRole: ["POST /orgs/{org}/organization-roles"],
     createInvitation: ["POST /orgs/{org}/invitations"],
     createOrUpdateCustomProperties: ["PATCH /orgs/{org}/properties/schema"],
     createOrUpdateCustomPropertiesValuesForRepos: [
@@ -4922,6 +4946,9 @@ var Endpoints = {
     ],
     createWebhook: ["POST /orgs/{org}/hooks"],
     delete: ["DELETE /orgs/{org}"],
+    deleteCustomOrganizationRole: [
+      "DELETE /orgs/{org}/organization-roles/{role_id}"
+    ],
     deleteWebhook: ["DELETE /orgs/{org}/hooks/{hook_id}"],
     enableOrDisableSecurityProductOnAllOrgRepos: [
       "POST /orgs/{org}/{security_product}/{enablement}"
@@ -4933,6 +4960,7 @@ var Endpoints = {
     ],
     getMembershipForAuthenticatedUser: ["GET /user/memberships/orgs/{org}"],
     getMembershipForUser: ["GET /orgs/{org}/memberships/{username}"],
+    getOrgRole: ["GET /orgs/{org}/organization-roles/{role_id}"],
     getWebhook: ["GET /orgs/{org}/hooks/{hook_id}"],
     getWebhookConfigForOrg: ["GET /orgs/{org}/hooks/{hook_id}/config"],
     getWebhookDelivery: [
@@ -4948,6 +4976,12 @@ var Endpoints = {
     listInvitationTeams: ["GET /orgs/{org}/invitations/{invitation_id}/teams"],
     listMembers: ["GET /orgs/{org}/members"],
     listMembershipsForAuthenticatedUser: ["GET /user/memberships/orgs"],
+    listOrgRoleTeams: ["GET /orgs/{org}/organization-roles/{role_id}/teams"],
+    listOrgRoleUsers: ["GET /orgs/{org}/organization-roles/{role_id}/users"],
+    listOrgRoles: ["GET /orgs/{org}/organization-roles"],
+    listOrganizationFineGrainedPermissions: [
+      "GET /orgs/{org}/organization-fine-grained-permissions"
+    ],
     listOutsideCollaborators: ["GET /orgs/{org}/outside_collaborators"],
     listPatGrantRepositories: [
       "GET /orgs/{org}/personal-access-tokens/{pat_id}/repositories"
@@ -4962,6 +4996,9 @@ var Endpoints = {
     listSecurityManagerTeams: ["GET /orgs/{org}/security-managers"],
     listWebhookDeliveries: ["GET /orgs/{org}/hooks/{hook_id}/deliveries"],
     listWebhooks: ["GET /orgs/{org}/hooks"],
+    patchCustomOrganizationRole: [
+      "PATCH /orgs/{org}/organization-roles/{role_id}"
+    ],
     pingWebhook: ["POST /orgs/{org}/hooks/{hook_id}/pings"],
     redeliverWebhookDelivery: [
       "POST /orgs/{org}/hooks/{hook_id}/deliveries/{delivery_id}/attempts"
@@ -4985,6 +5022,18 @@ var Endpoints = {
     ],
     reviewPatGrantRequestsInBulk: [
       "POST /orgs/{org}/personal-access-token-requests"
+    ],
+    revokeAllOrgRolesTeam: [
+      "DELETE /orgs/{org}/organization-roles/teams/{team_slug}"
+    ],
+    revokeAllOrgRolesUser: [
+      "DELETE /orgs/{org}/organization-roles/users/{username}"
+    ],
+    revokeOrgRoleTeam: [
+      "DELETE /orgs/{org}/organization-roles/teams/{team_slug}/{role_id}"
+    ],
+    revokeOrgRoleUser: [
+      "DELETE /orgs/{org}/organization-roles/users/{username}/{role_id}"
     ],
     setMembershipForUser: ["PUT /orgs/{org}/memberships/{username}"],
     setPublicMembershipForAuthenticatedUser: [
@@ -5276,6 +5325,9 @@ var Endpoints = {
       {},
       { mapToData: "users" }
     ],
+    cancelPagesDeployment: [
+      "POST /repos/{owner}/{repo}/pages/deployments/{pages_deployment_id}/cancel"
+    ],
     checkAutomatedSecurityFixes: [
       "GET /repos/{owner}/{repo}/automated-security-fixes"
     ],
@@ -5311,12 +5363,15 @@ var Endpoints = {
     createForAuthenticatedUser: ["POST /user/repos"],
     createFork: ["POST /repos/{owner}/{repo}/forks"],
     createInOrg: ["POST /orgs/{org}/repos"],
+    createOrUpdateCustomPropertiesValues: [
+      "PATCH /repos/{owner}/{repo}/properties/values"
+    ],
     createOrUpdateEnvironment: [
       "PUT /repos/{owner}/{repo}/environments/{environment_name}"
     ],
     createOrUpdateFileContents: ["PUT /repos/{owner}/{repo}/contents/{path}"],
     createOrgRuleset: ["POST /orgs/{org}/rulesets"],
-    createPagesDeployment: ["POST /repos/{owner}/{repo}/pages/deployment"],
+    createPagesDeployment: ["POST /repos/{owner}/{repo}/pages/deployments"],
     createPagesSite: ["POST /repos/{owner}/{repo}/pages"],
     createRelease: ["POST /repos/{owner}/{repo}/releases"],
     createRepoRuleset: ["POST /repos/{owner}/{repo}/rulesets"],
@@ -5469,6 +5524,9 @@ var Endpoints = {
     getOrgRulesets: ["GET /orgs/{org}/rulesets"],
     getPages: ["GET /repos/{owner}/{repo}/pages"],
     getPagesBuild: ["GET /repos/{owner}/{repo}/pages/builds/{build_id}"],
+    getPagesDeployment: [
+      "GET /repos/{owner}/{repo}/pages/deployments/{pages_deployment_id}"
+    ],
     getPagesHealthCheck: ["GET /repos/{owner}/{repo}/pages/health"],
     getParticipationStats: ["GET /repos/{owner}/{repo}/stats/participation"],
     getPullRequestReviewProtection: [
@@ -5679,6 +5737,9 @@ var Endpoints = {
     ]
   },
   securityAdvisories: {
+    createFork: [
+      "POST /repos/{owner}/{repo}/security-advisories/{ghsa_id}/forks"
+    ],
     createPrivateVulnerabilityReport: [
       "POST /repos/{owner}/{repo}/security-advisories/reports"
     ],
@@ -38757,7 +38818,7 @@ module.exports = axios;
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"name":"dotenv","version":"16.4.5","description":"Loads environment variables from .env file","main":"lib/main.js","types":"lib/main.d.ts","exports":{".":{"types":"./lib/main.d.ts","require":"./lib/main.js","default":"./lib/main.js"},"./config":"./config.js","./config.js":"./config.js","./lib/env-options":"./lib/env-options.js","./lib/env-options.js":"./lib/env-options.js","./lib/cli-options":"./lib/cli-options.js","./lib/cli-options.js":"./lib/cli-options.js","./package.json":"./package.json"},"scripts":{"dts-check":"tsc --project tests/types/tsconfig.json","lint":"standard","lint-readme":"standard-markdown","pretest":"npm run lint && npm run dts-check","test":"tap tests/*.js --100 -Rspec","test:coverage":"tap --coverage-report=lcov","prerelease":"npm test","release":"standard-version"},"repository":{"type":"git","url":"git://github.com/motdotla/dotenv.git"},"funding":"https://dotenvx.com","keywords":["dotenv","env",".env","environment","variables","config","settings"],"readmeFilename":"README.md","license":"BSD-2-Clause","devDependencies":{"@definitelytyped/dtslint":"^0.0.133","@types/node":"^18.11.3","decache":"^4.6.1","sinon":"^14.0.1","standard":"^17.0.0","standard-markdown":"^7.1.0","standard-version":"^9.5.0","tap":"^16.3.0","tar":"^6.1.11","typescript":"^4.8.4"},"engines":{"node":">=12"},"browser":{"fs":false}}');
+module.exports = JSON.parse('{"_from":"dotenv@^16.4.5","_id":"dotenv@16.4.5","_inBundle":false,"_integrity":"sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==","_location":"/dotenv","_phantomChildren":{},"_requested":{"type":"range","registry":true,"raw":"dotenv@^16.4.5","name":"dotenv","escapedName":"dotenv","rawSpec":"^16.4.5","saveSpec":null,"fetchSpec":"^16.4.5"},"_requiredBy":["#DEV:/"],"_resolved":"https://registry.npmjs.org/dotenv/-/dotenv-16.4.5.tgz","_shasum":"cdd3b3b604cb327e286b4762e13502f717cb099f","_spec":"dotenv@^16.4.5","_where":"/Users/ianjennings/Development/testdriver-action","browser":{"fs":false},"bugs":{"url":"https://github.com/motdotla/dotenv/issues"},"bundleDependencies":false,"deprecated":false,"description":"Loads environment variables from .env file","devDependencies":{"@definitelytyped/dtslint":"^0.0.133","@types/node":"^18.11.3","decache":"^4.6.1","sinon":"^14.0.1","standard":"^17.0.0","standard-markdown":"^7.1.0","standard-version":"^9.5.0","tap":"^16.3.0","tar":"^6.1.11","typescript":"^4.8.4"},"engines":{"node":">=12"},"exports":{".":{"types":"./lib/main.d.ts","require":"./lib/main.js","default":"./lib/main.js"},"./config":"./config.js","./config.js":"./config.js","./lib/env-options":"./lib/env-options.js","./lib/env-options.js":"./lib/env-options.js","./lib/cli-options":"./lib/cli-options.js","./lib/cli-options.js":"./lib/cli-options.js","./package.json":"./package.json"},"funding":"https://dotenvx.com","homepage":"https://github.com/motdotla/dotenv#readme","keywords":["dotenv","env",".env","environment","variables","config","settings"],"license":"BSD-2-Clause","main":"lib/main.js","name":"dotenv","repository":{"type":"git","url":"git://github.com/motdotla/dotenv.git"},"scripts":{"dts-check":"tsc --project tests/types/tsconfig.json","lint":"standard","lint-readme":"standard-markdown","prerelease":"npm test","pretest":"npm run lint && npm run dts-check","release":"standard-version","test":"tap tests/*.js --100 -Rspec","test:coverage":"tap --coverage-report=lcov"},"types":"lib/main.d.ts","version":"16.4.5"}');
 
 /***/ }),
 
@@ -38821,7 +38882,11 @@ const colors = __nccwpck_require__(3045);
 function extractLink(markdownString) {
   const regex = /\[!\[.*?\]\(.*?\)\]\((.*?)\)/;
   const match = markdownString.match(regex);
-  return match[1];
+  if (match.length) {
+    return match[1];
+  } else {
+    return null;
+  }
 }
 
 const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -38930,6 +38995,11 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       conclusion = resp.conclusion;
     }
 
+    if (status === "failure") {
+      console.log(`TestDriver: "The workflow has failed!"`);
+      throw new Error(`The workflow has failed!`);
+    }
+
     return conclusion;
   };
 
@@ -38963,19 +39033,27 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     console.log('TestDriver: "FAIL"'.red);
   }
 
-  console.log("View Test Results on Dashcam.io".yellow);
-  console.log(extractLink(shareLink));
+  let extractedFromMarkdown = extractLink(shareLink);
+
+  if (extractedFromMarkdown) {
+    console.log("View Test Results on Dashcam.io".yellow);
+    console.log(extractedFromMarkdown);
+  } else {
+    console.log("Something went wrong with Dashcam");
+    console.log(shareLink);
+  }
 
   console.log("TestDriver.ai Summary".yellow);
   console.log(oiResult);
 
   core.setOutput("summary", oiResult);
-  core.setOutput("link", extractLink(shareLink));
+  core.setOutput("link", extractedFromMarkdown);
   core.setOutput("markdown", shareLink);
 
   await core.summary
+
     .addHeading("TestDriver.ai Results")
-    .addLink("View Dashcam.io Recording!", extractLink(shareLink))
+    .addLink("View Dashcam.io Recording!mMarkdown", extractedFromMarkdown)
     .addHeading("Summary")
     .addRaw(oiResult)
     .addEOL()

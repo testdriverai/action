@@ -9,7 +9,11 @@ const colors = require("colors");
 function extractLink(markdownString) {
   const regex = /\[!\[.*?\]\(.*?\)\]\((.*?)\)/;
   const match = markdownString.match(regex);
-  return match[1];
+  if (match.length) {
+    return match[1];
+  } else {
+    return null;
+  }
 }
 
 const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -118,9 +122,9 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       conclusion = resp.conclusion;
     }
 
-    if(status === 'failure') {
-      console.log(`TestDriver: "The workflow has failed!"`)
-      throw new Error(`The workflow has failed!`)
+    if (status === "failure") {
+      console.log(`TestDriver: "The workflow has failed!"`);
+      throw new Error(`The workflow has failed!`);
     }
 
     return conclusion;
@@ -156,19 +160,27 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     console.log('TestDriver: "FAIL"'.red);
   }
 
-  console.log("View Test Results on Dashcam.io".yellow);
-  console.log(extractLink(shareLink));
+  let extractedFromMarkdown = extractLink(shareLink);
+
+  if (extractedFromMarkdown) {
+    console.log("View Test Results on Dashcam.io".yellow);
+    console.log(extractedFromMarkdown);
+  } else {
+    console.log("Something went wrong with Dashcam");
+    console.log(shareLink);
+  }
 
   console.log("TestDriver.ai Summary".yellow);
   console.log(oiResult);
 
   core.setOutput("summary", oiResult);
-  core.setOutput("link", extractLink(shareLink));
+  core.setOutput("link", extractedFromMarkdown);
   core.setOutput("markdown", shareLink);
 
   await core.summary
+
     .addHeading("TestDriver.ai Results")
-    .addLink("View Dashcam.io Recording!", extractLink(shareLink))
+    .addLink("View Dashcam.io Recording!mMarkdown", extractedFromMarkdown)
     .addHeading("Summary")
     .addRaw(oiResult)
     .addEOL()
