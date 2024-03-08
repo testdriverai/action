@@ -79,8 +79,6 @@ jobs:
             4. type 'ls' into the input
             5. press return
             6. validate Wave shows the result of 'ls'
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: Send custom JSON data to Slack workflow
         id: slack
         if: ${{ always() }}
