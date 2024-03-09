@@ -122,7 +122,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       conclusion = resp.conclusion;
     }
 
-    if (status === "failure") {
+    if (conclusion === "failure") {
       console.log(`TestDriver: "The workflow has failed!"`);
       throw new Error(`The workflow has failed!`);
     }
