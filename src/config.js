@@ -5,6 +5,7 @@ class Config {
   constructor() {
     this.input = {
       prompt: core.getInput("prompt"),
+      os: core.getInput("os") || "mac",
     };
 
     // the values of github.context.repo.owner and github.context.repo.repo are taken from

@@ -16,3 +16,4 @@ jobs:
             1. open youtube.
             2. find a cat video
             3. quit the browser
+          os: windows

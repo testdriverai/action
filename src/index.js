@@ -38,7 +38,9 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
         return match === "\n" ? "\\n" : "\\r\\n";
       });
 
-  console.log("inputs", { repo, branch, prompt });
+  let os = process.env.IS_DEV ? "mac" : config.input.os;
+
+  console.log("inputs", { repo, branch, prompt, os });
 
   console.log('TestDriver: "Dispatching testdriver..."'.green);
 
@@ -50,6 +52,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       repo,
       branch,
       prompt,
+      os,
     },
     {
       Accept: "application/json",
@@ -159,6 +162,8 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   } else {
     console.log('TestDriver: "FAIL"'.red);
   }
+
+  console.log("share link before extraction", shareLink);
 
   let extractedFromMarkdown = extractLink(shareLink);
 
