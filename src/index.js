@@ -6,6 +6,11 @@ require("dotenv").config();
 
 const colors = require("colors");
 
+const baseUrl =
+  (process.env.IS_DEV
+    ? "http://localhost:1337"
+    : "http://replayable-api-production.herokuapp.com") + "/api/v1";
+
 function extractLink(markdownString) {
   const regex = /\[!\[.*?\]\(.*?\)\]\((.*?)\)/;
   const match = markdownString.match(regex);
@@ -18,11 +23,32 @@ function extractLink(markdownString) {
 
 const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 
+const getToken = async (apiKey) => {
+  try {
+    const token = await axios
+      .post(
+        `${baseUrl}/auth/exchange-api-key`,
+        {
+          apiKey,
+        },
+        {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        }
+      )
+      .then((r) => r.data?.token);
+
+    if (token) return token;
+
+    throw new Error("");
+  } catch (err) {
+    throw new Error("Exchanging the API Key has failed");
+  }
+};
+
 (async function () {
-  const baseUrl =
-    (process.env.IS_DEV
-      ? "http://localhost:1337"
-      : "https://replayable-api-production.herokuapp.com") + "/api/v1";
+  const token = await getToken(config.apiKey);
+  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
   const repo = process.env.IS_DEV
     ? "replayableio/testdriver-action"
@@ -178,7 +204,6 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   core.setOutput("markdown", shareLink);
 
   await core.summary
-
     .addHeading("TestDriver.ai Results")
     .addLink("View Dashcam.io Recording!mMarkdown", extractedFromMarkdown)
     .addHeading("Summary")

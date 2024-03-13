@@ -13,6 +13,11 @@ inputs:
       3. Search for "Rick Astley"
       4. Click on the first video
     required: true
+  dashcamApiKey:
+    description: The dashcam team's API Key
+    required: true
+  dashcamProjectId:
+    description: The dashcam project id
 
 outputs:
   summary:

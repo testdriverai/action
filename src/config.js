@@ -6,6 +6,8 @@ class Config {
     this.input = {
       prompt: core.getInput("prompt"),
     };
+    this.apiKey = core.getInput("dashcamApiKey");
+    this.projectId = core.getInput("dashcamProjectId");
 
     // the values of github.context.repo.owner and github.context.repo.repo are taken from
     // the environment variable GITHUB_REPOSITORY specified in "owner/repo" format and
