@@ -1,8 +1,8 @@
-name: Dashcam.io - TestDriver.ai
+name: TestDriver.ai
 description: AI QA Agent for GitHub
 author: Dashcam.io
 branding:
-  icon: "user-plus"
+  icon: "user-check"
   color: "green"
 inputs:
   prompt:
