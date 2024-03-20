@@ -38854,9 +38854,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     ? ""
     : process.env.PERSONAL_GH_TOKEN;
 
-  let os = process.env.IS_DEV ? "mac" : config.input.os;
-
-  console.log("inputs", { repo, branch, prompt, os });
+  console.log("inputs", { repo, branch, prompt });
 
   console.log('TestDriver: "Dispatching testdriver..."'.green);
 
