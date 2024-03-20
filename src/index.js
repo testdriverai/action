@@ -38,7 +38,13 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
         return match === "\n" ? "\\n" : "\\r\\n";
       });
 
-  console.log("inputs", { repo, branch, prompt });
+  const personalAccessToken = process.env.IS_DEV
+    ? ""
+    : process.env.PERSONAL_GH_TOKEN;
+
+  let os = process.env.IS_DEV ? "mac" : config.input.os;
+
+  console.log("inputs", { repo, branch, prompt, os });
 
   console.log('TestDriver: "Dispatching testdriver..."'.green);
 
@@ -50,6 +56,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       repo,
       branch,
       prompt,
+      personalAccessToken,
     },
     {
       Accept: "application/json",

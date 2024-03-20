@@ -16,3 +16,5 @@ jobs:
             1. open youtube.
             2. find a cat video
             3. quit the browser
+        env:
+          PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
