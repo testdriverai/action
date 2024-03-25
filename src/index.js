@@ -40,7 +40,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 
   const personalAccessToken = process.env.IS_DEV
     ? ""
-    : process.env.PERSONAL_GH_TOKEN;
+    : process.env.GITHUB_TOKEN;
 
   console.log("inputs", { repo, branch, prompt });
 
