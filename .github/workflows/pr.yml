@@ -17,4 +17,4 @@ jobs:
             2. find a cat video
             3. quit the browser
         env:
-          PERSONAL_GH_TOKEN: ${{ secrets.PERSONAL_GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
