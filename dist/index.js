@@ -32578,6 +32578,8 @@ class Config {
       prompt: core.getInput("prompt"),
     };
 
+    console.log(github.context);
+
     // the values of github.context.repo.owner and github.context.repo.repo are taken from
     // the environment variable GITHUB_REPOSITORY specified in "owner/repo" format and
     // provided by the GitHub Action on the runtime
@@ -32586,6 +32588,7 @@ class Config {
       repo: github.context.repo.repo,
       issueNumber: github.context.issue.number,
       branch: github.context.ref,
+      token: github.context.token,
     };
   }
 }
@@ -38913,7 +38916,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 
   const personalAccessToken = process.env.IS_DEV
     ? ""
-    : process.env.GITHUB_TOKEN;
+    : config.githubContext.token;
 
   console.log("inputs", { repo, branch, prompt });
 

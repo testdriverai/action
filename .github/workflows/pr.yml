@@ -16,5 +16,3 @@ jobs:
             1. open youtube.
             2. find a cat video
             3. quit the browser
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
