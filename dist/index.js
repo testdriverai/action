@@ -38882,7 +38882,7 @@ const colors = __nccwpck_require__(3045);
 function extractLink(markdownString) {
   const regex = /\[!\[.*?\]\(.*?\)\]\((.*?)\)/;
   const match = markdownString.match(regex);
-  if (match.length) {
+  if (match?.length) {
     return match[1];
   } else {
     return null;
