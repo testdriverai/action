@@ -38,9 +38,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
         return match === "\n" ? "\\n" : "\\r\\n";
       });
 
-  const personalAccessToken = process.env.IS_DEV
-    ? ""
-    : process.env.GITHUB_TOKEN;
+  const personalAccessToken = config.input.gh_token;
 
   console.log("inputs", { repo, branch, prompt });
 
