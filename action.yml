@@ -27,6 +27,5 @@ outputs:
 runs:
   using: node16
   main: ./dist/index.js
-
-env:
-  FORCE_COLOR: "3"
+  env:
+    FORCE_COLOR: "3"
