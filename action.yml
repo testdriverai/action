@@ -8,7 +8,7 @@ inputs:
   gh_token:
     description: >-
       The GitHub token to use for authentication. Required for private repositories.
-      Use `${{ secrets.GH_TOKEN }} as the value, it is set in GitHub by default.
+      Use `secrets.GH_TOKEN` as the value, it is set in GitHub by default.
       See https://docs.github.com/en/actions/security-guides/automatic-token-authentication
     required: false
   prompt:
