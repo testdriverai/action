@@ -39,7 +39,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 
   const personalAccessToken = config.input.gh_token;
 
-  console.log(chalk.green("TestDriver:"), '"Dispatching testdriver..."');
+  console.log(chalk.green("TestDriver:"), '"Starting my engine..."');
 
   const {
     data: { dispatchId },
@@ -57,10 +57,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     }
   );
 
-  console.log(
-    chalk.green("TestDriver:"),
-    '"Finding the dispatched workflow..."'.green
-  );
+  console.log(chalk.green("TestDriver:"), '"3. 2. 1..."');
 
   const checkWorkflow = async () => {
     const {
@@ -106,7 +103,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     return { status, conclusion };
   };
 
-  console.log(chalk.green("TestDriver:"), '"Let\'s Go!"');
+  console.log(chalk.green("TestDriver:"), '"Let\'s Go!!!"');
 
   const waitUntilComplete = async () => {
     let { status, conclusion } = await checkStatus();
