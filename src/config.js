@@ -5,6 +5,7 @@ class Config {
   constructor() {
     this.input = {
       prompt: core.getInput("prompt"),
+      gh_token: core.getInput("gh_token"),
     };
 
     // the values of github.context.repo.owner and github.context.repo.repo are taken from

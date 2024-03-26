@@ -1,10 +1,9 @@
 const core = require("@actions/core");
 const config = require("./config");
 const axios = require("axios");
+const colors = require("colors");
 
 require("dotenv").config();
-
-const colors = require("colors");
 
 function extractLink(markdownString) {
   const regex = /\[!\[.*?\]\(.*?\)\]\((.*?)\)/;
@@ -38,9 +37,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
         return match === "\n" ? "\\n" : "\\r\\n";
       });
 
-  const personalAccessToken = process.env.IS_DEV
-    ? ""
-    : process.env.GITHUB_TOKEN;
+  const personalAccessToken = config.input.gh_token;
 
   console.log("inputs", { repo, branch, prompt });
 
