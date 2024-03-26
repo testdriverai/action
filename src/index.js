@@ -1,10 +1,9 @@
 const core = require("@actions/core");
 const config = require("./config");
 const axios = require("axios");
+const colors = require("colors");
 
 require("dotenv").config();
-
-const colors = require("colors");
 
 function extractLink(markdownString) {
   const regex = /\[!\[.*?\]\(.*?\)\]\((.*?)\)/;
