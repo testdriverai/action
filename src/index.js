@@ -1,7 +1,7 @@
 const core = require("@actions/core");
 const config = require("./config");
 const axios = require("axios");
-const colors = require("colors");
+const chalk = require("chalk");
 
 require("dotenv").config();
 
@@ -28,8 +28,8 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     : config.githubContext.owner + "/" + config.githubContext.repo;
   const branch = process.env.IS_DEV ? "main" : config.githubContext.branch;
 
-  console.log('TestDriver: "Looking into it..."'.green);
-  console.log('TestDriver: "I can help ya test that!"'.green);
+  console.log(chalk.green("TestDriver:"), '"Looking into it..."');
+  console.log(chalk.green("TestDriver:"), '"I can help ya test that!"');
 
   let prompt = process.env.IS_DEV
     ? "open youtube"
@@ -39,9 +39,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 
   const personalAccessToken = process.env.GITHUB_TOKEN;
 
-  console.log("inputs", { repo, branch, prompt });
-
-  console.log('TestDriver: "Dispatching testdriver..."'.green);
+  console.log(chalk.green("TestDriver:"), '"Starting my engine..."');
 
   const {
     data: { dispatchId },
@@ -59,9 +57,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     }
   );
 
-  console.log("dispatch id:", dispatchId);
-
-  console.log('TestDriver: "Finding the dispatched workflow..."'.green);
+  console.log(chalk.green("TestDriver:"), '"3. 2. 1..."');
 
   const checkWorkflow = async () => {
     const {
@@ -92,8 +88,6 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 
   const workflowId = await waitUntilWorkflowAvailable();
 
-  console.log("Found workflow id:", workflowId);
-
   const checkStatus = async () => {
     const {
       data: { status, conclusion },
@@ -106,27 +100,27 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       }
     );
 
-    console.log("workflow status: ", status, conclusion);
-
     return { status, conclusion };
   };
 
-  console.log('TestDriver: "Let\'s Go!"'.green);
+  console.log(chalk.green("TestDriver:"), '"Let\'s Go!!!"');
 
   const waitUntilComplete = async () => {
     let { status, conclusion } = await checkStatus();
 
     while (status !== "completed") {
       await waitFor(1000 * 60 * 1);
-      console.log('TestDriver: "Testing..."'.green);
+      console.log(chalk.green("TestDriver:"), '"Testing..."');
       const resp = await checkStatus();
       status = resp.status;
       conclusion = resp.conclusion;
     }
 
     if (conclusion === "failure") {
-      console.log(`TestDriver: "The workflow has failed!"`);
-      throw new Error(`The workflow has failed!`);
+      console.log(
+        chalk.green("TestDriver:"),
+        chalk.red('"The workflow has failed!"')
+      );
     }
 
     return conclusion;
@@ -134,8 +128,8 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 
   await waitUntilComplete();
 
-  console.log('TestDriver: "Done!"'.green);
-  console.log('TestDriver: "Writing my report..."'.green);
+  console.log(chalk.green("TestDriver:"), chalk.green('"Done!"'));
+  console.log(chalk.green("TestDriver:"), '"Writing my report..."'.green);
 
   const {
     data: { shareLink, oiResult },
@@ -148,7 +142,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     }
   );
 
-  console.log('TestDriver: "Interpreting results..."'.green);
+  console.log(chalk.green("TestDriver:"), '"Interpreting results..."'.green);
 
   const isPassed = oiResult.includes("The test passed");
 
@@ -157,22 +151,22 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   }
 
   if (isPassed) {
-    console.log('TestDriver: "PASS"'.green);
+    console.log(chalk.green("TestDriver:"), chalk.green('"PASS"'));
   } else {
-    console.log('TestDriver: "FAIL"'.red);
+    console.log(chalk.green("TestDriver:"), chalk.red('"FAIL"'));
   }
 
   let extractedFromMarkdown = extractLink(shareLink);
 
   if (extractedFromMarkdown) {
-    console.log("View Test Results on Dashcam.io".yellow);
+    console.log(chalk.yellow("View Test Results on Dashcam.io"));
     console.log(extractedFromMarkdown);
   } else {
-    console.log("Something went wrong with Dashcam");
+    console.log(chalk.red("Something went wrong with Dashcam"));
     console.log(shareLink);
   }
 
-  console.log("TestDriver.ai Summary".yellow);
+  console.log(chalk.yellow("TestDriver.ai Summary"));
   console.log(oiResult);
 
   core.setOutput("summary", oiResult);
@@ -182,7 +176,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   await core.summary
 
     .addHeading("TestDriver.ai Results")
-    .addLink("View Dashcam.io Recording!mMarkdown", extractedFromMarkdown)
+    .addLink("View Dashcam.io Recording!", extractedFromMarkdown)
     .addHeading("Summary")
     .addRaw(oiResult)
     .addEOL()

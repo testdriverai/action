@@ -18,3 +18,4 @@ jobs:
             3. quit the browser
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FORCE_COLOR: "3"
