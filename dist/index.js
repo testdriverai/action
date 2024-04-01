@@ -40003,6 +40003,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       repo,
       branch,
       prompt,
+      prerun,
       personalAccessToken,
     },
     {
