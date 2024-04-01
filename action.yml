@@ -13,7 +13,10 @@ inputs:
       3. Search for "Rick Astley"
       4. Click on the first video
     required: true
-
+  prerun:
+    description: >-
+      A script to run before the test.
+    required: false
 outputs:
   summary:
     description: >-
