@@ -5,6 +5,7 @@ class Config {
   constructor() {
     this.input = {
       prompt: core.getInput("prompt"),
+      prerun: core.getInput("prerun"),
       gh_token: core.getInput("gh_token"),
     };
 
