@@ -18,7 +18,6 @@ jobs:
             3. quit the browser
           prerun: |
             npm install dashcam-chrome --save
-            rm ~/Library/Application\ Support/Google/Chrome/Singleton*
             /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --load-extension=./node_modules/dashcam-chrome/build/
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
