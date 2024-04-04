@@ -33636,6 +33636,7 @@ class Config {
   constructor() {
     this.input = {
       prompt: core.getInput("prompt"),
+      prerun: core.getInput("prerun"),
       gh_token: core.getInput("gh_token"),
     };
 
@@ -39991,6 +39992,9 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
         return match === "\n" ? "\\n" : "\\r\\n";
       });
 
+
+  let prerun = config.input.prerun;;
+
   const personalAccessToken = process.env.GITHUB_TOKEN;
 
   console.log(chalk.green("TestDriver:"), '"Starting my engine..."');
@@ -40003,6 +40007,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       repo,
       branch,
       prompt,
+      prerun,
       personalAccessToken,
     },
     {
