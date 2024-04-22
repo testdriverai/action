@@ -39993,7 +39993,8 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       });
 
 
-  let prerun = config.input.prerun;;
+  let prerun = config.input.prerun;
+  let version = config.input.version;
 
   const personalAccessToken = process.env.GITHUB_TOKEN;
 
@@ -40008,6 +40009,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       branch,
       prompt,
       prerun,
+      version,
       personalAccessToken,
     },
     {
