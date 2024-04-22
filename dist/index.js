@@ -33637,6 +33637,7 @@ class Config {
     this.input = {
       prompt: core.getInput("prompt"),
       prerun: core.getInput("prerun"),
+      version: core.getInput("version"),
       gh_token: core.getInput("gh_token"),
     };
 
