@@ -46,7 +46,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 
   const personalAccessToken = process.env.GITHUB_TOKEN;
 
-  console.log(chalk.green("TestDriver:"), '"Starting my engine..."');mm
+  console.log(chalk.green("TestDriver:"), '"Starting my engine..."');
 
   const {
     data: { dispatchId },
