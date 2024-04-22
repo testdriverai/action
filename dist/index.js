@@ -33637,7 +33637,6 @@ class Config {
     this.input = {
       prompt: core.getInput("prompt"),
       prerun: core.getInput("prerun"),
-      version: core.getInput("version"),
       gh_token: core.getInput("gh_token"),
     };
 
@@ -39984,6 +39983,11 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     : config.githubContext.owner + "/" + config.githubContext.repo;
   const branch = process.env.IS_DEV ? "main" : config.githubContext.branch;
 
+  let prerun = config.input.prerun;
+  let version = config.input.version;
+  
+  console.log(chalk.green("TestDriver:"), `"Version ${version}"`);
+
   console.log(chalk.green("TestDriver:"), '"Looking into it..."');
   console.log(chalk.green("TestDriver:"), '"I can help ya test that!"');
 
@@ -39994,12 +39998,10 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       });
 
 
-  let prerun = config.input.prerun;
-  let version = config.input.version;
 
   const personalAccessToken = process.env.GITHUB_TOKEN;
 
-  console.log(chalk.green("TestDriver:"), '"Starting my engine..."');
+  console.log(chalk.green("TestDriver:"), '"Starting my engine..."');mm
 
   const {
     data: { dispatchId },
