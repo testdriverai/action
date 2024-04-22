@@ -17,6 +17,10 @@ inputs:
     description: >-
       A script to run before the test.
     required: false
+  version:
+    description: >-
+      The TestDriver version to run. Default 1.0.0
+    required: false
 outputs:
   summary:
     description: >-
