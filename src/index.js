@@ -66,12 +66,16 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   console.log(chalk.green("TestDriver:"), '"3. 2. 1..."');
 
   const checkWorkflow = async () => {
+
+    console.log(chalk.green("TestDriver:"), '"Launching..."');
+
     const {
       data: { workflowId },
     } = await axios.post(
       `${baseUrl}/testdriver-workflow`,
       {
         dispatchId,
+        branch: version
       },
       {
         Accept: "application/json",
