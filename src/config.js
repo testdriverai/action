@@ -7,6 +7,7 @@ class Config {
       prompt: core.getInput("prompt"),
       prerun: core.getInput("prerun"),
       gh_token: core.getInput("gh_token"),
+      version: core.getInput("version"),
     };
 
     // the values of github.context.repo.owner and github.context.repo.repo are taken from
