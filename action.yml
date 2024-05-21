@@ -21,6 +21,10 @@ inputs:
     description: >-
       The TestDriver version to run. Default 1.0.0
     required: false
+  key:
+    description: >-
+      Your Dashcam API key
+    required: false
 outputs:
   summary:
     description: >-

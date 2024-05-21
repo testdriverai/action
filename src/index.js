@@ -30,6 +30,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 
   let prerun = config.input.prerun;
   let version = config.input.version;
+  let key = config.input.key;
   
   console.log(chalk.green("TestDriver:"), `"Version ${version}"`);
 
@@ -58,6 +59,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       prompt,
       prerun,
       version,
+      key,
       personalAccessToken,
     },
     {
@@ -187,7 +189,6 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   core.setOutput("markdown", shareLink);
 
   await core.summary
-
     .addHeading("TestDriver.ai Results")
     .addLink("View Dashcam.io Recording!", extractedFromMarkdown)
     .addHeading("Summary")
