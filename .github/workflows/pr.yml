@@ -14,9 +14,10 @@ jobs:
         with:
           version: v3.3.8
           prompt: |
-            1. open youtube.
+            1. open youtube
             2. find a cat video
             3. quit the browser
+            4. /summarize
           prerun: |
             npm install dashcam-chrome --save
             /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --load-extension=./node_modules/dashcam-chrome/build/ 1>/dev/null 2>&1 &
