@@ -5,6 +5,10 @@ const chalk = require("chalk");
 
 require("dotenv").config();
 
+// get version from package.json
+const packageJson = require("./package.json");
+const actionVersion = packageJson.version;
+
 function extractLink(markdownString) {
   const regex = /\[!\[.*?\]\(.*?\)\]\((.*?)\)/;
   const match = markdownString.match(regex);
@@ -31,8 +35,9 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   let prerun = config.input.prerun;
   let version = config.input.version;
   let key = config.input.key;
-  
-  console.log(chalk.green("TestDriver:"), `"Version ${version}"`);
+
+  console.log(`testdriver@${version}`);
+  console.log(`testdriver-action@${actionVersion}`);
 
   console.log(chalk.green("TestDriver:"), '"Looking into it..."');
   console.log(chalk.green("TestDriver:"), '"I can help ya test that!"');
@@ -42,8 +47,6 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     : config.input.prompt.replace(/(\r\n|\n)/g, function (match) {
         return match === "\n" ? "\\n" : "\\r\\n";
       });
-
-
 
   const personalAccessToken = process.env.GITHUB_TOKEN;
 
@@ -159,7 +162,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 
   console.log(chalk.green("TestDriver:"), '"Interpreting results..."'.green);
 
-  console.log(exitcode)
+  console.log(chalk.green("TestDriver:"), `"Exit Code ${exitcode}"`.green);
 
   const isPassed = parseInt(exitcode) === 0;
 
