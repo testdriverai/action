@@ -40074,7 +40074,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     let status = response.data.status;
     let conclusion = response.data.conclusion;
 
-    console.log(data)
+    console.log(response)
 
     console.log(chalk.green("TestDriver:"), '"Status:"', status);
 
