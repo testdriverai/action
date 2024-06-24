@@ -40074,8 +40074,6 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     let status = response.data.status;
     let conclusion = response.data.conclusion;
 
-    console.log(chalk.green("TestDriver:"), '"Status:"', status);
-
     return { status, conclusion };
   };
 
@@ -40092,20 +40090,13 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       conclusion = resp.conclusion;
     }
 
-    if (conclusion === "failure") {
-      console.log(
-        chalk.green("TestDriver:"),
-        chalk.red('"The workflow has failed!"')
-      );
-    }
-
     return conclusion;
   };
 
-  await waitUntilComplete();
+  let conc = await waitUntilComplete();
 
   console.log(chalk.green("TestDriver:"), chalk.green('"Done!"'));
-  console.log(chalk.green("TestDriver:"), '"Writing my report..."'.green);
+  console.log(chalk.green("TestDriver:"), "Writing my report...");
 
   const {
     data: { shareLink, oiResult, exitcode },
@@ -40118,9 +40109,21 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     }
   );
 
-  console.log(chalk.green("TestDriver:"), '"Interpreting results..."'.green);
+  console.log(chalk.green("TestDriver:"), "Interpreting results...");
 
-  console.log(chalk.green("TestDriver:"), `"Exit Code ${exitcode}"`.green);
+  console.log('')
+  console.log('Test Report:')
+  if (conc === "failure") {
+    console.log(
+      chalk.yellow("Workflow:"),
+      chalk.red('Fail')
+    );
+  } else {
+    console.log(
+      chalk.yellow("Workflow:"),
+      chalk.green('Pass')
+    );
+  }
 
   const isPassed = parseInt(exitcode) === 0;
 
@@ -40129,27 +40132,31 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   }
 
   if (isPassed) {
-    console.log(chalk.green("TestDriver:"), chalk.green('"PASS"'));
+    console.log(chalk.yellow("Test:"), chalk.green('Pass'));
   } else {
-    console.log(chalk.green("TestDriver:"), chalk.red('"FAIL"'));
+    console.log(chalk.yellow("Test:"), chalk.red('Fail'));
   }
 
   let extractedFromMarkdown = extractLink(shareLink);
 
+  console.log('')
+  console.log(chalk.yellow("View Test Result on Dashcam.io:"));
+
   if (extractedFromMarkdown) {
-    console.log(chalk.yellow("View Test Results on Dashcam.io"));
     console.log(extractedFromMarkdown);
   } else {
     console.log(chalk.red("Something went wrong with Dashcam"));
     console.log(shareLink);
   }
 
+  console.log('')
   console.log(chalk.yellow("TestDriver.ai Summary"));
   console.log(oiResult);
 
   core.setOutput("summary", oiResult);
   core.setOutput("link", extractedFromMarkdown);
   core.setOutput("markdown", shareLink);
+  core.setOutput("success", isPassed);
 
   await core.summary
     .addHeading("TestDriver.ai Results")
