@@ -147,7 +147,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   console.log(chalk.green("TestDriver:"), '"Writing my report..."'.green);
 
   const {
-    data: { shareLink, oiResult },
+    data: { shareLink, oiResult, exitcode },
   } = await axios.post(
     `${baseUrl}/testdriver-artifacts`,
     { workflowId },
@@ -159,7 +159,9 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 
   console.log(chalk.green("TestDriver:"), '"Interpreting results..."'.green);
 
-  const isPassed = oiResult.includes("The test passed");
+  console.log(exitcode)
+
+  const isPassed = parseInt(exitcode) === 0;
 
   if (!isPassed) {
     core.setFailed(oiResult);
