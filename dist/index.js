@@ -39988,11 +39988,11 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   const branch = process.env.IS_DEV ? "main" : config.githubContext.branch;
 
   let prerun = config.input.prerun;
-  let actionVersion = config.input.version;
+  let version = config.input.version;
   let key = config.input.key;
 
   console.log(`testdriver@${pgkVersion}`);
-  console.log(`testdriver-action@${actionVersion}`);
+  console.log(`testdriver-action@${version}`);
 
   console.log(chalk.green("TestDriver:"), '"Looking into it..."');
   console.log(chalk.green("TestDriver:"), '"I can help ya test that!"');
