@@ -40074,7 +40074,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     let status = response.data.status;
     let conclusion = response.data.conclusion;
 
-    console.log(chalk.green("TestDriver:"), '"Status:"', status);
+    console.log(chalk.green("TestDriver:"), '"Status:"', status, '"Conclusion:"', conclusion);
 
     return { status, conclusion };
   };
@@ -40105,7 +40105,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   await waitUntilComplete();
 
   console.log(chalk.green("TestDriver:"), chalk.green('"Done!"'));
-  console.log(chalk.green("TestDriver:"), '"Writing my report..."'.green);
+  console.log(chalk.green("TestDriver:"), chalk.green('"Writing my report..."'));
 
   const {
     data: { shareLink, oiResult, exitcode },
@@ -40118,9 +40118,9 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     }
   );
 
-  console.log(chalk.green("TestDriver:"), '"Interpreting results..."'.green);
+  console.log(chalk.green("TestDriver:"), chalk.green('"Interpreting results..."'));
 
-  console.log(chalk.green("TestDriver:"), `"Exit Code ${exitcode}"`.green);
+  console.log(chalk.green("TestDriver:"), chalk.green(`"Exit Code ${exitcode}"`, typeof exitcode));
 
   const isPassed = parseInt(exitcode) === 0;
 
