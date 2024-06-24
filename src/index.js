@@ -154,6 +154,8 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 
   console.log(chalk.green("TestDriver:"), "Interpreting results...");
 
+  console.log('')
+  console.log('Test Report:')
   if (conc === "failure") {
     console.log(
       chalk.yellow("Workflow:"),
@@ -166,7 +168,6 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     );
   }
 
-
   const isPassed = parseInt(exitcode) === 0;
 
   if (!isPassed) {
@@ -174,21 +175,24 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   }
 
   if (isPassed) {
-    console.log("Test:", chalk.green('Pass'));
+    console.log(chalk.yellow("Test:"), chalk.green('Pass'));
   } else {
-    console.log("Test:", chalk.red('Fail'));
+    console.log(chalk.yellow("Test:"), chalk.red('Fail'));
   }
 
   let extractedFromMarkdown = extractLink(shareLink);
 
+  console.log('')
+  console.log(chalk.yellow("View Test Result on Dashcam.io:"));
+
   if (extractedFromMarkdown) {
-    console.log(chalk.yellow("View Test Results on Dashcam.io"));
     console.log(extractedFromMarkdown);
   } else {
     console.log(chalk.red("Something went wrong with Dashcam"));
     console.log(shareLink);
   }
 
+  console.log('')
   console.log(chalk.yellow("TestDriver.ai Summary"));
   console.log(oiResult);
 
