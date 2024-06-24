@@ -5,9 +5,7 @@ const chalk = require("chalk");
 
 require("dotenv").config();
 
-// get version from package.json
-const packageJson = require("./package.json");
-const actionVersion = packageJson.version;
+const pgkVersion = '1.0.0'
 
 function extractLink(markdownString) {
   const regex = /\[!\[.*?\]\(.*?\)\]\((.*?)\)/;
@@ -36,7 +34,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   let version = config.input.version;
   let key = config.input.key;
 
-  console.log(`testdriver@${version}`);
+  console.log(`testdriver@${pgkVersion}`);
   console.log(`testdriver-action@${actionVersion}`);
 
   console.log(chalk.green("TestDriver:"), '"Looking into it..."');

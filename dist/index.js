@@ -33664,14 +33664,6 @@ try {
 
 /***/ }),
 
-/***/ 7358:
-/***/ ((module) => {
-
-module.exports = eval("require")("./package.json");
-
-
-/***/ }),
-
 /***/ 9975:
 /***/ ((module) => {
 
@@ -39970,9 +39962,7 @@ const chalk = __nccwpck_require__(8818);
 
 (__nccwpck_require__(2437).config)();
 
-// get version from package.json
-const packageJson = __nccwpck_require__(7358);
-const actionVersion = packageJson.version;
+const pgkVersion = '1.0.0'
 
 function extractLink(markdownString) {
   const regex = /\[!\[.*?\]\(.*?\)\]\((.*?)\)/;
@@ -40001,7 +39991,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   let version = config.input.version;
   let key = config.input.key;
 
-  console.log(`testdriver@${version}`);
+  console.log(`testdriver@${pgkVersion}`);
   console.log(`testdriver-action@${actionVersion}`);
 
   console.log(chalk.green("TestDriver:"), '"Looking into it..."');
