@@ -40062,9 +40062,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   const workflowId = await waitUntilWorkflowAvailable();
 
   const checkStatus = async () => {
-    const {
-      data: { status, conclusion },
-    } = await axios.post(
+    let response = await axios.post(
       `${baseUrl}/testdriver-status-check`,
       { workflowId },
       {
@@ -40072,6 +40070,13 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
         "Content-Type": "application/json",
       }
     );
+
+    let status = response.data.status;
+    let conclusion = response.data.conclusion;
+
+    console.log(data)
+
+    console.log(chalk.green("TestDriver:"), '"Status:"', status);
 
     return { status, conclusion };
   };
