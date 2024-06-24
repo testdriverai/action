@@ -40092,20 +40092,13 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       conclusion = resp.conclusion;
     }
 
-    if (conclusion === "failure") {
-      console.log(
-        chalk.green("TestDriver:"),
-        chalk.red('"The workflow has failed!"')
-      );
-    }
-
     return conclusion;
   };
 
-  await waitUntilComplete();
+  let conc = await waitUntilComplete();
 
   console.log(chalk.green("TestDriver:"), chalk.green('"Done!"'));
-  console.log(chalk.green("TestDriver:"), chalk.green('"Writing my report..."'));
+  console.log(chalk.green("TestDriver:"), "Writing my report...");
 
   const {
     data: { shareLink, oiResult, exitcode },
@@ -40118,9 +40111,14 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     }
   );
 
-  console.log(chalk.green("TestDriver:"), chalk.green('"Interpreting results..."'));
+  if (conc === "failure") {
+    console.log(
+      chalk.green("Workflow:"),
+      chalk.red('Failed')
+    );
+  }
 
-  console.log(chalk.green("TestDriver:"), chalk.green(`"Exit Code ${exitcode}"`, typeof exitcode));
+  console.log(chalk.green("TestDriver:"), "Interpreting results...");
 
   const isPassed = parseInt(exitcode) === 0;
 
@@ -40129,9 +40127,9 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   }
 
   if (isPassed) {
-    console.log(chalk.green("TestDriver:"), chalk.green('"PASS"'));
+    console.log(chalk.green("Test:"), chalk.green('"PASS"'));
   } else {
-    console.log(chalk.green("TestDriver:"), chalk.red('"FAIL"'));
+    console.log(chalk.green("Test:"), chalk.red('"FAIL"'));
   }
 
   let extractedFromMarkdown = extractLink(shareLink);
@@ -40150,6 +40148,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   core.setOutput("summary", oiResult);
   core.setOutput("link", extractedFromMarkdown);
   core.setOutput("markdown", shareLink);
+  core.setOutput("success", isPassed);
 
   await core.summary
     .addHeading("TestDriver.ai Results")
