@@ -31,7 +31,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   const branch = process.env.IS_DEV ? "main" : config.githubContext.branch;
 
   let prerun = config.input.prerun;
-  let version = config.input.version;
+  let actionVersion = config.input.version;
   let key = config.input.key;
 
   console.log(`testdriver@${pgkVersion}`);
