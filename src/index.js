@@ -117,8 +117,6 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     let status = response.data.status;
     let conclusion = response.data.conclusion;
 
-    console.log(chalk.green("TestDriver:"), '"Status:"', status, '"Conclusion:"', conclusion);
-
     return { status, conclusion };
   };
 
@@ -154,14 +152,20 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     }
   );
 
+  console.log(chalk.green("TestDriver:"), "Interpreting results...");
+
   if (conc === "failure") {
     console.log(
-      chalk.green("Workflow:"),
-      chalk.red('Failed')
+      chalk.yellow("Workflow:"),
+      chalk.red('Fail')
+    );
+  } else {
+    console.log(
+      chalk.yellow("Workflow:"),
+      chalk.green('Pass')
     );
   }
 
-  console.log(chalk.green("TestDriver:"), "Interpreting results...");
 
   const isPassed = parseInt(exitcode) === 0;
 
@@ -170,9 +174,9 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   }
 
   if (isPassed) {
-    console.log(chalk.green("Test:"), chalk.green('"PASS"'));
+    console.log("Test:", chalk.green('Pass'));
   } else {
-    console.log(chalk.green("Test:"), chalk.red('"FAIL"'));
+    console.log("Test:", chalk.red('Fail'));
   }
 
   let extractedFromMarkdown = extractLink(shareLink);
