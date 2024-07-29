@@ -1,8 +1,8 @@
-name: Dashcam.io - TestDriver.ai
+name: TestDriver.ai
 description: AI QA Agent for GitHub
 author: Dashcam.io
 branding:
-  icon: "user-plus"
+  icon: "user-check"
   color: "green"
 inputs:
   prompt:
@@ -15,7 +15,18 @@ inputs:
     required: true
   os:
     description: The operating system to use, mac or windows, will be windows by default
-
+  prerun:
+    description: >-
+      A script to run before the test.
+    required: false
+  version:
+    description: >-
+      The TestDriver version to run. Default 1.0.0
+    required: false
+  key:
+    description: >-
+      Your Dashcam API key
+    required: false
 outputs:
   summary:
     description: >-

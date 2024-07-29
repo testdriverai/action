@@ -1,10 +1,10 @@
+![TestDriver_1](https://github.com/dashcamio/testdriver/assets/318295/2a0ad981-8504-46f0-ad97-60cb6c26f1e7)
+
 # TestDriver.ai
 
 AI QA Agent for GitHub. 
 
-[Website](https://testdriver.ai) | [Join our Discord](https://discord.gg/ZjhBsJc5)
-
-![TestDriver_1](https://github.com/dashcamio/testdriver/assets/318295/2a0ad981-8504-46f0-ad97-60cb6c26f1e7)
+[Quickstart](https://github.com/dashcamio/testdriver-web) | [Website](https://testdriver.ai) | [Join our Discord](https://discord.gg/ZjhBsJc5)
 
 https://github.com/dashcamio/testdriver/assets/318295/d325f048-e6ad-44f3-b04d-9fcd1beada21
 
