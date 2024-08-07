@@ -9,6 +9,7 @@ class Config {
       gh_token: core.getInput("gh_token"),
       version: core.getInput("version"),
       key: core.getInput("key"),
+      os: core.getInput("os") || "windows",
     };
 
     // the values of github.context.repo.owner and github.context.repo.repo are taken from

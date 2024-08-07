@@ -25,6 +25,10 @@ inputs:
     description: >-
       Your Dashcam API key
     required: false
+  os:
+    description: >-
+      The operating system to run tests on. Default "Windows"
+    required: false
 outputs:
   summary:
     description: >-
