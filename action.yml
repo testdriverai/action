@@ -13,8 +13,6 @@ inputs:
       3. Search for "Rick Astley"
       4. Click on the first video
     required: true
-  os:
-    description: The operating system to use, mac or windows, will be windows by default
   prerun:
     description: >-
       A script to run before the test.
