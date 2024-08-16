@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v3
       - uses: ./
         with:
-          version: v3.3.8
+          version: windows-release
           prompt: |
             1. open youtube
             2. find a cat video
@@ -20,8 +20,10 @@ jobs:
             4. /summarize
           os: windows
           prerun: |
-            npm install dashcam-chrome --save
-            /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --load-extension=./node_modules/dashcam-chrome/build/ 1>/dev/null 2>&1 &
+            cd $env:TEMP
+            npm init -y
+            npm install dashcam-chrome
+            Start-Process "C:/Program Files/Google/Chrome/Application/chrome.exe" -ArgumentList "--start-maximized","--load-extension=$(pwd)/node_modules/dashcam-chrome/build"
             exit
           key: ${{ secrets.DASHCAM_WORKSPACE_API }}
         env:
