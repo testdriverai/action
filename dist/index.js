@@ -16,6 +16,7 @@ class Config {
       gh_token: core.getInput("gh_token"),
       version: core.getInput("version"),
       key: core.getInput("key"),
+      os: core.getInput("os") || "windows",
     };
 
     // the values of github.context.repo.owner and github.context.repo.repo are taken from
@@ -128,7 +129,7 @@ const chalk = __nccwpck_require__(922);
 
 (__nccwpck_require__(900).config)();
 
-const pgkVersion = '1.0.0'
+const pgkVersion = "1.0.0";
 
 function extractLink(markdownString) {
   const regex = /\[!\[.*?\]\(.*?\)\]\((.*?)\)/;
@@ -156,6 +157,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   let prerun = config.input.prerun;
   let version = config.input.version;
   let key = config.input.key;
+  let os = config.input.os;
 
   console.log(`testdriver@${pgkVersion}`);
   console.log(`testdriver-action@${version}`);
@@ -168,8 +170,6 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     : config.input.prompt.replace(/(\r\n|\n)/g, function (match) {
         return match === "\n" ? "\\n" : "\\r\\n";
       });
-
-  let os = process.env.IS_DEV ? "mac" : config.input.os;
 
   console.log("inputs", { repo, branch, prompt, os });
   const personalAccessToken = process.env.GITHUB_TOKEN;
@@ -188,6 +188,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       prerun,
       version,
       key,
+      os,
       personalAccessToken,
     },
     {
@@ -199,7 +200,6 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   console.log(chalk.green("TestDriver:"), '"3. 2. 1..."');
 
   const checkWorkflow = async () => {
-
     console.log(chalk.green("TestDriver:"), '"Launching..."');
 
     const {
@@ -208,7 +208,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       `${baseUrl}/testdriver-workflow`,
       {
         dispatchId,
-        branch: version
+        branch: version,
       },
       {
         Accept: "application/json",
@@ -281,18 +281,12 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 
   console.log(chalk.green("TestDriver:"), "Interpreting results...");
 
-  console.log('')
-  console.log('Test Report:')
+  console.log("");
+  console.log("Test Report:");
   if (conc === "failure") {
-    console.log(
-      chalk.yellow("Workflow:"),
-      chalk.red('Fail')
-    );
+    console.log(chalk.yellow("Workflow:"), chalk.red("Fail"));
   } else {
-    console.log(
-      chalk.yellow("Workflow:"),
-      chalk.green('Pass')
-    );
+    console.log(chalk.yellow("Workflow:"), chalk.green("Pass"));
   }
 
   const isPassed = parseInt(exitcode) === 0;
@@ -302,16 +296,16 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   }
 
   if (isPassed) {
-    console.log(chalk.yellow("Test:"), chalk.green('Pass'));
+    console.log(chalk.yellow("Test:"), chalk.green("Pass"));
   } else {
-    console.log(chalk.yellow("Test:"), chalk.red('Fail'));
+    console.log(chalk.yellow("Test:"), chalk.red("Fail"));
   }
 
   console.log("share link before extraction", shareLink);
 
   let extractedFromMarkdown = extractLink(shareLink);
 
-  console.log('')
+  console.log("");
   console.log(chalk.yellow("View Test Result on Dashcam.io:"));
 
   if (extractedFromMarkdown) {
@@ -321,7 +315,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     console.log(shareLink);
   }
 
-  console.log('')
+  console.log("");
   console.log(chalk.yellow("TestDriver.ai Summary"));
   console.log(oiResult);
 
