@@ -47,6 +47,9 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
         return match === "\n" ? "\\n" : "\\r\\n";
       });
 
+  let os = process.env.IS_DEV ? "mac" : config.input.os;
+
+  console.log("inputs", { repo, branch, prompt, os });
   const personalAccessToken = process.env.GITHUB_TOKEN;
 
   console.log(chalk.green("TestDriver:"), '"Starting my engine..."');
@@ -59,6 +62,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       repo,
       branch,
       prompt,
+      os,
       prerun,
       version,
       key,
@@ -181,6 +185,8 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   } else {
     console.log(chalk.yellow("Test:"), chalk.red('Fail'));
   }
+
+  console.log("share link before extraction", shareLink);
 
   let extractedFromMarkdown = extractLink(shareLink);
 
