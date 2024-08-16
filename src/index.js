@@ -33,6 +33,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   let prerun = config.input.prerun;
   let version = config.input.version;
   let key = config.input.key;
+  let os = config.input.os;
 
   console.log(`testdriver@${pgkVersion}`);
   console.log(`testdriver-action@${version}`);
@@ -65,6 +66,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       prerun,
       version,
       key,
+      os,
       personalAccessToken,
     },
     {
