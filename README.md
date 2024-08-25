@@ -4,7 +4,7 @@
 
 Next generation autonomous AI agent for end-to-end testing of web & desktop
 
-[Docs]([https://docs.testdriver.ai) | [Website](https://testdriver.ai) | [Join our Discord](https://discord.gg/ZjhBsJc5)
+[Docs](https://docs.testdriver.ai) | [Website](https://testdriver.ai) | [Join our Discord](https://discord.gg/ZjhBsJc5)
 
 TestDriver isn't like any test framework you've used before - it's more like your own QA employee with their own development environment. 
 
