@@ -2,43 +2,25 @@
 
 # TestDriver.ai
 
-AI QA Agent for GitHub. 
+Next generation autonomous AI agent for end-to-end testing of web & desktop
 
-[Quickstart](https://github.com/dashcamio/testdriver-web) | [Website](https://testdriver.ai) | [Join our Discord](https://discord.gg/ZjhBsJc5)
+[Docs]([https://docs.testdriver.ai] | [Website](https://testdriver.ai) | [Join our Discord](https://discord.gg/ZjhBsJc5)
 
-https://github.com/dashcamio/testdriver/assets/318295/d325f048-e6ad-44f3-b04d-9fcd1beada21
+TestDriver isn't like any test framework you've used before - it's more like your own QA employee with their own development environment. 
 
-# Why
+TestDriver uses AI to understand what's on the screen, move the mouse and operate the keyboard. This kind of black-box testing has some major advantages:
 
-Manual testing is reptitive and slow. Automated tests take siginifigant investment time and need to be maintained. The TestDriver QA Agent can test your app with natural language prompts and AI vision, which is quicker to set up and more resiliant to changes.
+- **Easier set up:** No need to add test IDs or craft complex selectors
+- **Less Maintenance:** Tests don't break when code changes
+- **More Power:** TestDriver can test any application and control any OS setting
 
-- No code or frameworks to invest in
-- Describe test steps with nautural lanuage
-- Resiliant to changes in color, positioning, etc
-- Can interpret objectives that get in the way of the goal
-- High powered Silicon Mac M1 VM
-- Supports full stack applications (backend and frontend) as well as desktop app
-- Records video and logs of test results (powered by [Dashcam.io](https://dashcam.io/?ref=testdrivergithub))
-  - Desktop Video Replay
-  - AI Logs
-  - Chrome Developer Console
-  - Chrome Network Requests
-  - Universal Logfile Ingestion
+# How to deploy a test
 
-# Example Prompt
+1. Tell TestDriver what to do in natural language on your local machine using `npm i testdriverai -g` 
+2. TestDriver looks at the screen and uses mouse and keyboard emulation to accomplish the goal
+3. Run TestDriver tests on our test infrastructure (this github action)
 
-```
-1. focus the Wave application with Spotlight
-2. click "Continue"
-3. focus the Wave input with the keyboard shorcut Command + I
-4. type 'ls' into the input
-5. press return
-6. validate Wave shows the result of 'ls'
-```
- 
-# How
-
-TestDriver is a productized infrastructure pipeline created by [Dashcam.io](https://dashcam.io). In short, this is how it works:
+# How it works (in detail)
 
 1. Spawn a Mac1 VM
 2. Clone your repository (optional)
@@ -106,7 +88,7 @@ npm install dashcam-chrome --save
 exit
 ```
 
-## Electron App (Wave Terminal)
+## Build an Electron App (Taken from Wave Terminal)
 
 ```sh
 brew install go
