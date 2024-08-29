@@ -5,13 +5,11 @@ class Config {
   constructor() {
     this.input = {
       prompt: core.getInput("prompt"),
-      os: core.getInput("os") || "mac",
       prerun: core.getInput("prerun"),
-      gh_token: core.getInput("gh_token"),
-      version: core.getInput("version"),
+      branch: core.getInput("branch") || "main",
       key: core.getInput("key"),
       os: core.getInput("os") || "windows",
-      testdriveraiVersion: core.getInput("testdriveraiVersion") || "latest",
+      version: core.getInput("version") || "latest",
     };
 
     // the values of github.context.repo.owner and github.context.repo.repo are taken from

@@ -31,13 +31,13 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   const branch = process.env.IS_DEV ? "main" : config.githubContext.branch;
 
   let prerun = config.input.prerun;
-  let version = config.input.version;
+  let testdriverBranch = config.input.branch;
   let key = config.input.key;
   let os = config.input.os;
-  let testdriveraiVersion = config.input.testdriveraiVersion;
+  let testdriveraiVersion = config.input.version;
 
   console.log(`testdriver@${pgkVersion}`);
-  console.log(`testdriver-action@${version}`);
+  console.log(`testdriver-action@${testdriverBranch}`);
 
   console.log(chalk.green("TestDriver:"), '"Looking into it..."');
   console.log(chalk.green("TestDriver:"), '"I can help ya test that!"');
@@ -63,11 +63,11 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       prompt,
       os,
       prerun,
-      version,
+      version: testdriverBranch,
       key,
       os,
       personalAccessToken,
-      testdriveraiVersion
+      testdriveraiVersion,
     },
     {
       Accept: "application/json",
@@ -86,7 +86,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       `${baseUrl}/testdriver-workflow`,
       {
         dispatchId,
-        branch: version,
+        branch: testdriverBranch,
       },
       {
         Accept: "application/json",
