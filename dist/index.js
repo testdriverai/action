@@ -33642,6 +33642,7 @@ class Config {
       version: core.getInput("version"),
       key: core.getInput("key"),
       os: core.getInput("os") || "windows",
+      testdriveraiVersion: core.getInput("testdriveraiVersion") || "latest",
     };
 
     // the values of github.context.repo.owner and github.context.repo.repo are taken from
@@ -39892,7 +39893,7 @@ module.exports = axios;
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"_from":"dotenv@^16.4.5","_id":"dotenv@16.4.5","_inBundle":false,"_integrity":"sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==","_location":"/dotenv","_phantomChildren":{},"_requested":{"type":"range","registry":true,"raw":"dotenv@^16.4.5","name":"dotenv","escapedName":"dotenv","rawSpec":"^16.4.5","saveSpec":null,"fetchSpec":"^16.4.5"},"_requiredBy":["#DEV:/"],"_resolved":"https://registry.npmjs.org/dotenv/-/dotenv-16.4.5.tgz","_shasum":"cdd3b3b604cb327e286b4762e13502f717cb099f","_spec":"dotenv@^16.4.5","_where":"/Users/ianjennings/Development/testdriver-action","browser":{"fs":false},"bugs":{"url":"https://github.com/motdotla/dotenv/issues"},"bundleDependencies":false,"deprecated":false,"description":"Loads environment variables from .env file","devDependencies":{"@definitelytyped/dtslint":"^0.0.133","@types/node":"^18.11.3","decache":"^4.6.1","sinon":"^14.0.1","standard":"^17.0.0","standard-markdown":"^7.1.0","standard-version":"^9.5.0","tap":"^16.3.0","tar":"^6.1.11","typescript":"^4.8.4"},"engines":{"node":">=12"},"exports":{".":{"types":"./lib/main.d.ts","require":"./lib/main.js","default":"./lib/main.js"},"./config":"./config.js","./config.js":"./config.js","./lib/env-options":"./lib/env-options.js","./lib/env-options.js":"./lib/env-options.js","./lib/cli-options":"./lib/cli-options.js","./lib/cli-options.js":"./lib/cli-options.js","./package.json":"./package.json"},"funding":"https://dotenvx.com","homepage":"https://github.com/motdotla/dotenv#readme","keywords":["dotenv","env",".env","environment","variables","config","settings"],"license":"BSD-2-Clause","main":"lib/main.js","name":"dotenv","repository":{"type":"git","url":"git://github.com/motdotla/dotenv.git"},"scripts":{"dts-check":"tsc --project tests/types/tsconfig.json","lint":"standard","lint-readme":"standard-markdown","prerelease":"npm test","pretest":"npm run lint && npm run dts-check","release":"standard-version","test":"tap tests/*.js --100 -Rspec","test:coverage":"tap --coverage-report=lcov"},"types":"lib/main.d.ts","version":"16.4.5"}');
+module.exports = JSON.parse('{"name":"dotenv","version":"16.4.5","description":"Loads environment variables from .env file","main":"lib/main.js","types":"lib/main.d.ts","exports":{".":{"types":"./lib/main.d.ts","require":"./lib/main.js","default":"./lib/main.js"},"./config":"./config.js","./config.js":"./config.js","./lib/env-options":"./lib/env-options.js","./lib/env-options.js":"./lib/env-options.js","./lib/cli-options":"./lib/cli-options.js","./lib/cli-options.js":"./lib/cli-options.js","./package.json":"./package.json"},"scripts":{"dts-check":"tsc --project tests/types/tsconfig.json","lint":"standard","lint-readme":"standard-markdown","pretest":"npm run lint && npm run dts-check","test":"tap tests/*.js --100 -Rspec","test:coverage":"tap --coverage-report=lcov","prerelease":"npm test","release":"standard-version"},"repository":{"type":"git","url":"git://github.com/motdotla/dotenv.git"},"funding":"https://dotenvx.com","keywords":["dotenv","env",".env","environment","variables","config","settings"],"readmeFilename":"README.md","license":"BSD-2-Clause","devDependencies":{"@definitelytyped/dtslint":"^0.0.133","@types/node":"^18.11.3","decache":"^4.6.1","sinon":"^14.0.1","standard":"^17.0.0","standard-markdown":"^7.1.0","standard-version":"^9.5.0","tap":"^16.3.0","tar":"^6.1.11","typescript":"^4.8.4"},"engines":{"node":">=12"},"browser":{"fs":false}}');
 
 /***/ }),
 
@@ -39993,6 +39994,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   let version = config.input.version;
   let key = config.input.key;
   let os = config.input.os;
+  let testdriveraiVersion = config.input.testdriveraiVersion;
 
   console.log(`testdriver@${pgkVersion}`);
   console.log(`testdriver-action@${version}`);
@@ -40003,8 +40005,8 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   let prompt = process.env.IS_DEV
     ? "open youtube"
     : config.input.prompt.replace(/(\r\n|\n)/g, function (match) {
-        return match === "\n" ? "\\n" : "\\r\\n";
-      });
+      return match === "\n" ? "\\n" : "\\r\\n";
+    });
 
   console.log("inputs", { repo, branch, prompt, os });
   const personalAccessToken = process.env.GITHUB_TOKEN;
@@ -40025,6 +40027,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       key,
       os,
       personalAccessToken,
+      testdriveraiVersion
     },
     {
       Accept: "application/json",

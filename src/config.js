@@ -11,6 +11,7 @@ class Config {
       version: core.getInput("version"),
       key: core.getInput("key"),
       os: core.getInput("os") || "windows",
+      testdriveraiVersion: core.getInput("testdriveraiVersion") || "latest",
     };
 
     // the values of github.context.repo.owner and github.context.repo.repo are taken from
