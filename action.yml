@@ -17,9 +17,9 @@ inputs:
     description: >-
       A script to run before the test.
     required: false
-  version:
+  branch:
     description: >-
-      The TestDriver version to run. Default 1.0.0
+      The TestDriver branch to run. Defaults to "main"
     required: false
   key:
     description: >-
@@ -27,7 +27,11 @@ inputs:
     required: false
   os:
     description: >-
-      The operating system to run tests on. Default "Windows"
+      The operating system to run tests on. Defaults to "windows". Can be either "windows" or "mac"
+    required: false
+  version:
+    description: >-
+      The version of testdriverai to run. Defaults to "latest"
     required: false
 outputs:
   summary:
