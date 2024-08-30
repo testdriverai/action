@@ -40009,7 +40009,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   console.log(chalk.yellow("branch:"), branch);
   console.log(chalk.yellow("os:"), os);
   console.log(chalk.yellow("prompt:"));
-  console.log(prompt);
+  console.log(prompt.replace(/\\n/g, '\n').replace(/\\r\\n/g, '\r\n'));
   console.log(chalk.yellow("prerun:"));
   console.log(prerun);
   console.log("");
