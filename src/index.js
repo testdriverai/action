@@ -44,7 +44,8 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     : config.input.prompt.replace(/(\r\n|\n)/g, function (match) {
       return match === "\n" ? "\\n" : "\\r\\n";
     });
-
+  
+    console.log("");
   console.log(chalk.green('Inputs'));
   console.log(chalk.yellow("repo:"), repo);
   console.log(chalk.yellow("branch:"), branch);
@@ -53,6 +54,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   console.log(prompt);
   console.log(chalk.yellow("prerun:"));
   console.log(prerun);
+  console.log("");
 
   console.log(chalk.green("TestDriver:"), '"Looking into it..."');
   console.log(chalk.green("TestDriver:"), '"I can help ya test that!"');
