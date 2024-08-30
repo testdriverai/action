@@ -217,8 +217,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     .addLink("View Dashcam.io Recording!", extractedFromMarkdown)
     .addHeading("Summary")
     .addRaw(oiResult)
-    .addEOL()
+    .addSeparator()
     .addRaw(shareLink)
-    .addEOL()
     .write();
 })();
