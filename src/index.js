@@ -39,16 +39,24 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   console.log(`testdriver@${pgkVersion}`);
   console.log(`testdriver-action@${testdriverBranch}`);
 
-  console.log(chalk.green("TestDriver:"), '"Looking into it..."');
-  console.log(chalk.green("TestDriver:"), '"I can help ya test that!"');
-
   let prompt = process.env.IS_DEV
     ? "open youtube"
     : config.input.prompt.replace(/(\r\n|\n)/g, function (match) {
       return match === "\n" ? "\\n" : "\\r\\n";
     });
 
-  console.log("inputs", { repo, branch, prompt, os });
+  console.log(chalk.green('Inputs'));
+  console.log(chalk.yellow("repo:"), repo);
+  console.log(chalk.yellow("branch:"), branch);
+  console.log(chalk.yellow("os:"), os);
+  console.log(chalk.yellow("prompt:"));
+  console.log(prompt);
+  console.log(chalk.yellow("prerun:"));
+  console.log(prerun);
+
+  console.log(chalk.green("TestDriver:"), '"Looking into it..."');
+  console.log(chalk.green("TestDriver:"), '"I can help ya test that!"');
+
   const personalAccessToken = process.env.GITHUB_TOKEN;
 
   console.log(chalk.green("TestDriver:"), '"Starting my engine..."');
