@@ -33,6 +33,12 @@ inputs:
     description: >-
       The version of testdriverai to run. Defaults to "latest"
     required: false
+  createPR:
+    type: boolean
+    description: >-
+      Specify if a PR should be created with the updated test results. Defaults to "false"
+    default: "false"
+
 outputs:
   summary:
     description: >-

@@ -33641,6 +33641,10 @@ class Config {
       key: core.getInput("key"),
       os: core.getInput("os") || "windows",
       version: core.getInput("version") || "latest",
+      createPR:
+        core.getInput("create-pr")?.toLowerCase()?.trim() === "true"
+          ? true
+          : false,
     };
 
     // the values of github.context.repo.owner and github.context.repo.repo are taken from
@@ -39993,6 +39997,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   let key = config.input.key;
   let os = config.input.os;
   let testdriveraiVersion = config.input.version;
+  let createPR = config.input.createPR;
 
   console.log(`testdriver@${pgkVersion}`);
   console.log(`testdriver-action@${testdriverBranch}`);
@@ -40000,18 +40005,18 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   let prompt = process.env.IS_DEV
     ? "open youtube"
     : config.input.prompt.replace(/(\r\n|\n)/g, function (match) {
-      return match === "\n" ? "\\n" : "\\r\\n";
-    });
-  
-    console.log("");
-  console.log(chalk.green('Inputs'));
+        return match === "\n" ? "\\n" : "\\r\\n";
+      });
+
+  console.log("");
+  console.log(chalk.green("Inputs"));
   console.log(chalk.yellow("repo:"), repo);
   console.log(chalk.yellow("branch:"), branch);
   console.log(chalk.yellow("os:"), os);
   console.log(chalk.yellow("prompt:"));
-  console.log(prompt.replace(/\\n/g, '\n').replace(/\\r\\n/g, '\r\n'));
+  console.log(prompt.replace(/\\n/g, "\n").replace(/\\r\\n/g, "\r\n"));
   console.log(chalk.yellow("prerun:"));
-  console.log(prerun.replace(/\\n/g, '\n').replace(/\\r\\n/g, '\r\n'));
+  console.log(prerun.replace(/\\n/g, "\n").replace(/\\r\\n/g, "\r\n"));
   console.log("");
 
   console.log(chalk.green("TestDriver:"), '"Looking into it..."');
@@ -40036,6 +40041,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       os,
       personalAccessToken,
       testdriveraiVersion,
+      createPR,
     },
     {
       Accept: "application/json",

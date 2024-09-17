@@ -10,6 +10,10 @@ class Config {
       key: core.getInput("key"),
       os: core.getInput("os") || "windows",
       version: core.getInput("version") || "latest",
+      createPR:
+        core.getInput("create-pr")?.toLowerCase()?.trim() === "true"
+          ? true
+          : false,
     };
 
     // the values of github.context.repo.owner and github.context.repo.repo are taken from
