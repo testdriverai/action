@@ -62,6 +62,10 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 
   const personalAccessToken = process.env.GITHUB_TOKEN;
 
+  if (personalAccessToken.length) {
+    console.log(chalk.green("TestDriver:"), '"Access Token Supplied..."');  
+  }
+
   console.log(chalk.green("TestDriver:"), '"Starting my engine..."');
 
   const {
@@ -190,8 +194,6 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   } else {
     console.log(chalk.yellow("Test:"), chalk.red("Fail"));
   }
-
-  console.log("share link before extraction", shareLink);
 
   let extractedFromMarkdown = extractLink(shareLink);
 
