@@ -38,6 +38,23 @@ inputs:
     description: >-
       Specify if a PR should be created with the updated test results. Defaults to "false"
     default: "false"
+    required: false
+  pr-title:
+    description: >-
+      The title of the PR to be created
+    required: false
+  pr-base:
+    description: >-
+      The base branch to create the PR on.
+    required: false
+  pr-branch:
+    description: >-
+      The branch to create the PR from.
+    require: false
+  pr-test-filename:
+    description: >-
+      The filename of the test to be created in the PR.
+    required: false
 
 outputs:
   summary:

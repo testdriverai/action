@@ -3,11 +3,11 @@ const github = require("@actions/github");
 
 class Config {
   constructor() {
-    const createPR = core.getInput("create-pr")?.toLowerCase()?.trim();
+    let createPR = core.getInput("create-pr")?.toLowerCase()?.trim() || "false";
     if (!["true", "false"].includes(createPR)) {
-      throw new Error(
-        "Invalid value for create-pr input. It should be either true or false."
-      );
+      throw new Error("Invalid value for create-pr. It should be a boolean");
+    } else {
+      createPR = JSON.parse(createPR);
     }
     this.input = {
       prompt: core.getInput("prompt"),
@@ -16,8 +16,29 @@ class Config {
       key: core.getInput("key"),
       os: core.getInput("os") || "windows",
       version: core.getInput("version") || "latest",
-      createPR: JSON.parse(createPR),
+      createPR,
+      prBranch: createPR ? core.getInput("pr-branch") : "",
+      prBase: createPR ? core.getInput("pr-base") : "",
+      prTitle: createPR ? core.getInput("pr-title") : "",
+      prTestFilename: createPR ? core.getInput("pr-test-filename") : "",
     };
+
+    if (createPR) {
+      if (!this.input.prBranch) {
+        throw new Error("'pr-branch' is required when 'create-pr' is 'true'");
+      }
+      if (!this.input.prBase) {
+        throw new Error("'pr-base' is required when 'create-pr' is 'true'");
+      }
+      if (!this.input.prTitle) {
+        throw new Error("'pr-title' is required when 'create-pr' is 'true'");
+      }
+      if (!this.input.prTestFilename) {
+        throw new Error(
+          "'pr-test-filename' is required when 'create-pr' is 'true'"
+        );
+      }
+    }
 
     // the values of github.context.repo.owner and github.context.repo.repo are taken from
     // the environment variable GITHUB_REPOSITORY specified in "owner/repo" format and

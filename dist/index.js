@@ -33634,11 +33634,11 @@ const github = __nccwpck_require__(5438);
 
 class Config {
   constructor() {
-    const createPR = core.getInput("create-pr")?.toLowerCase()?.trim();
+    let createPR = core.getInput("create-pr")?.toLowerCase()?.trim() || "false";
     if (!["true", "false"].includes(createPR)) {
-      throw new Error(
-        "Invalid value for create-pr input. It should be either true or false."
-      );
+      throw new Error("Invalid value for create-pr. It should be a boolean");
+    } else {
+      createPR = JSON.parse(createPR);
     }
     this.input = {
       prompt: core.getInput("prompt"),
@@ -33647,8 +33647,29 @@ class Config {
       key: core.getInput("key"),
       os: core.getInput("os") || "windows",
       version: core.getInput("version") || "latest",
-      createPR: JSON.parse(createPR),
+      createPR,
+      prBranch: createPR ? core.getInput("pr-branch") : "",
+      prBase: createPR ? core.getInput("pr-base") : "",
+      prTitle: createPR ? core.getInput("pr-title") : "",
+      prTestFilename: createPR ? core.getInput("pr-test-filename") : "",
     };
+
+    if (createPR) {
+      if (!this.input.prBranch) {
+        throw new Error("'pr-branch' is required when 'create-pr' is 'true'");
+      }
+      if (!this.input.prBase) {
+        throw new Error("'pr-base' is required when 'create-pr' is 'true'");
+      }
+      if (!this.input.prTitle) {
+        throw new Error("'pr-title' is required when 'create-pr' is 'true'");
+      }
+      if (!this.input.prTestFilename) {
+        throw new Error(
+          "'pr-test-filename' is required when 'create-pr' is 'true'"
+        );
+      }
+    }
 
     // the values of github.context.repo.owner and github.context.repo.repo are taken from
     // the environment variable GITHUB_REPOSITORY specified in "owner/repo" format and
@@ -40001,6 +40022,10 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   let os = config.input.os;
   let testdriveraiVersion = config.input.version;
   let createPR = config.input.createPR;
+  let prBranch = config.input.prBranch;
+  let prBase = config.input.prBase;
+  let prTitle = config.input.prTitle;
+  let prTestFilename = config.input.prTestFilename;
 
   console.log(`testdriver@${pgkVersion}`);
   console.log(`testdriver-action@${testdriverBranch}`);
@@ -40016,6 +40041,13 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   console.log(chalk.yellow("repo:"), repo);
   console.log(chalk.yellow("branch:"), branch);
   console.log(chalk.yellow("os:"), os);
+  console.log(chalk.yellow("createPR:"), createPR);
+  if (createPR) {
+    console.log(chalk.yellow("prBranch:"), prBranch);
+    console.log(chalk.yellow("prBase:"), prBase);
+    console.log(chalk.yellow("prTitle:"), prTitle);
+    console.log(chalk.yellow("prTestFilename:"), prTestFilename);
+  }
   console.log(chalk.yellow("prompt:"));
   console.log(prompt.replace(/\\n/g, "\n").replace(/\\r\\n/g, "\r\n"));
   console.log(chalk.yellow("prerun:"));
@@ -40045,6 +40077,10 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       personalAccessToken,
       testdriveraiVersion,
       createPR,
+      prTitle,
+      prBase,
+      prBranch,
+      prTestFilename,
     },
     {
       Accept: "application/json",
