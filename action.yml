@@ -46,6 +46,7 @@ inputs:
   pr-base:
     description: >-
       The base branch to create the PR on.
+    default: main
     required: false
   pr-branch:
     description: >-

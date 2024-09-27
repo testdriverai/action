@@ -18,7 +18,7 @@ class Config {
       os: core.getInput("os") || "windows",
       version: core.getInput("version") || "latest",
       createPR,
-      prBase: createPR ? core.getInput("pr-base") : "",
+      prBase: createPR ? core.getInput("pr-base") || "main" : "",
       prBranch: createPR ? core.getInput("pr-branch") : "",
       prTitle: createPR ? core.getInput("pr-title") : "",
       prTestFilename: createPR ? core.getInput("pr-test-filename") : "",
