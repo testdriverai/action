@@ -33640,6 +33640,7 @@ class Config {
     } else {
       createPR = JSON.parse(createPR);
     }
+    const random = Math.random().toString(36).substring(7);
     this.input = {
       prompt: core.getInput("prompt"),
       prerun: core.getInput("prerun"),
@@ -33648,28 +33649,17 @@ class Config {
       os: core.getInput("os") || "windows",
       version: core.getInput("version") || "latest",
       createPR,
-      prBranch: createPR ? core.getInput("pr-branch") : "",
-      prBase: createPR ? core.getInput("pr-base") : "",
-      prTitle: createPR ? core.getInput("pr-title") : "",
-      prTestFilename: createPR ? core.getInput("pr-test-filename") : "",
+      prBase: createPR ? core.getInput("pr-base") || "main" : "",
+      prBranch: createPR
+        ? core.getInput("pr-branch") || `testdriver/test-${random}`
+        : "",
+      prTitle: createPR
+        ? core.getInput("pr-title") || `Testdriver-${random}`
+        : "",
+      prTestFilename: createPR
+        ? core.getInput("pr-test-filename") || `testdriver-${random}.yml`
+        : "",
     };
-
-    if (createPR) {
-      if (!this.input.prBranch) {
-        throw new Error("'pr-branch' is required when 'create-pr' is 'true'");
-      }
-      if (!this.input.prBase) {
-        throw new Error("'pr-base' is required when 'create-pr' is 'true'");
-      }
-      if (!this.input.prTitle) {
-        throw new Error("'pr-title' is required when 'create-pr' is 'true'");
-      }
-      if (!this.input.prTestFilename) {
-        throw new Error(
-          "'pr-test-filename' is required when 'create-pr' is 'true'"
-        );
-      }
-    }
 
     // the values of github.context.repo.owner and github.context.repo.repo are taken from
     // the environment variable GITHUB_REPOSITORY specified in "owner/repo" format and
