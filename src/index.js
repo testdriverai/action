@@ -36,6 +36,10 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   let os = config.input.os;
   let testdriveraiVersion = config.input.version;
   let createPR = config.input.createPR;
+  let prBranch = config.input.prBranch;
+  let prBase = config.input.prBase;
+  let prTitle = config.input.prTitle;
+  let prTestFilename = config.input.prTestFilename;
 
   console.log(`testdriver@${pgkVersion}`);
   console.log(`testdriver-action@${testdriverBranch}`);
@@ -51,6 +55,14 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   console.log(chalk.yellow("repo:"), repo);
   console.log(chalk.yellow("branch:"), branch);
   console.log(chalk.yellow("os:"), os);
+  console.log(chalk.yellow("createPR:"), createPR);
+  if (createPR) {
+    if (prBranch) console.log(chalk.yellow("prBranch:"), prBranch);
+    if (prBase) console.log(chalk.yellow("prBase:"), prBase);
+    if (prTitle) console.log(chalk.yellow("prTitle:"), prTitle);
+    if (prTestFilename)
+      console.log(chalk.yellow("prTestFilename:"), prTestFilename);
+  }
   console.log(chalk.yellow("prompt:"));
   console.log(prompt.replace(/\\n/g, "\n").replace(/\\r\\n/g, "\r\n"));
   console.log(chalk.yellow("prerun:"));
@@ -84,6 +96,10 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       personalAccessToken,
       testdriveraiVersion,
       createPR,
+      prTitle,
+      prBase,
+      prBranch,
+      prTestFilename,
     },
     {
       Accept: "application/json",

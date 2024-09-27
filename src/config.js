@@ -3,12 +3,13 @@ const github = require("@actions/github");
 
 class Config {
   constructor() {
-    const createPR = core.getInput("create-pr")?.toLowerCase()?.trim();
+    let createPR = core.getInput("create-pr")?.toLowerCase()?.trim() || "false";
     if (!["true", "false"].includes(createPR)) {
-      throw new Error(
-        "Invalid value for create-pr input. It should be either true or false."
-      );
+      throw new Error("Invalid value for create-pr. It should be a boolean");
+    } else {
+      createPR = JSON.parse(createPR);
     }
+
     this.input = {
       prompt: core.getInput("prompt"),
       prerun: core.getInput("prerun"),
@@ -16,7 +17,11 @@ class Config {
       key: core.getInput("key"),
       os: core.getInput("os") || "windows",
       version: core.getInput("version") || "latest",
-      createPR: JSON.parse(createPR),
+      createPR,
+      prBase: createPR ? core.getInput("pr-base") || "main" : "",
+      prBranch: createPR ? core.getInput("pr-branch") : "",
+      prTitle: createPR ? core.getInput("pr-title") : "",
+      prTestFilename: createPR ? core.getInput("pr-test-filename") : "",
     };
 
     // the values of github.context.repo.owner and github.context.repo.repo are taken from
