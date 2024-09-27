@@ -57,10 +57,11 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   console.log(chalk.yellow("os:"), os);
   console.log(chalk.yellow("createPR:"), createPR);
   if (createPR) {
-    console.log(chalk.yellow("prBranch:"), prBranch);
-    console.log(chalk.yellow("prBase:"), prBase);
-    console.log(chalk.yellow("prTitle:"), prTitle);
-    console.log(chalk.yellow("prTestFilename:"), prTestFilename);
+    if (prBranch) console.log(chalk.yellow("prBranch:"), prBranch);
+    if (prBase) console.log(chalk.yellow("prBase:"), prBase);
+    if (prTitle) console.log(chalk.yellow("prTitle:"), prTitle);
+    if (prTestFilename)
+      console.log(chalk.yellow("prTestFilename:"), prTestFilename);
   }
   console.log(chalk.yellow("prompt:"));
   console.log(prompt.replace(/\\n/g, "\n").replace(/\\r\\n/g, "\r\n"));

@@ -9,7 +9,7 @@ class Config {
     } else {
       createPR = JSON.parse(createPR);
     }
-    const random = Math.random().toString(36).substring(7);
+
     this.input = {
       prompt: core.getInput("prompt"),
       prerun: core.getInput("prerun"),
@@ -18,16 +18,10 @@ class Config {
       os: core.getInput("os") || "windows",
       version: core.getInput("version") || "latest",
       createPR,
-      prBase: createPR ? core.getInput("pr-base") || "main" : "",
-      prBranch: createPR
-        ? core.getInput("pr-branch") || `testdriver/test-${random}`
-        : "",
-      prTitle: createPR
-        ? core.getInput("pr-title") || `Testdriver-${random}`
-        : "",
-      prTestFilename: createPR
-        ? core.getInput("pr-test-filename") || `testdriver-${random}.yml`
-        : "",
+      prBase: createPR ? core.getInput("pr-base") : "",
+      prBranch: createPR ? core.getInput("pr-branch") : "",
+      prTitle: createPR ? core.getInput("pr-title") : "",
+      prTestFilename: createPR ? core.getInput("pr-test-filename") : "",
     };
 
     // the values of github.context.repo.owner and github.context.repo.repo are taken from
