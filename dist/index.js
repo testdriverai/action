@@ -33663,7 +33663,7 @@ class Config {
       repo: github.context.repo.repo,
       issueNumber: github.context.issue.number,
       branch: github.context.ref,
-      token: github.context.token
+      token: github.context.token || github.token
     };
   }
 }
@@ -40039,7 +40039,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   console.log(chalk.green("TestDriver:"), '"Looking into it..."');
   console.log(chalk.green("TestDriver:"), '"I can help ya test that!"');
 
-  const personalAccessToken = process.env.GITHUB_TOKEN || config.githubContext.token || null;
+  const personalAccessToken = process.env.GITHUB_TOKEN || config.githubContext.token || undefined;
 
   if (personalAccessToken) {
     console.log(chalk.green("TestDriver:"), '"Access Token Supplied..."');
