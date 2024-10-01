@@ -68,7 +68,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   console.log(chalk.green("TestDriver:"), '"Looking into it..."');
   console.log(chalk.green("TestDriver:"), '"I can help ya test that!"');
 
-  const personalAccessToken = process.env.GITHUB_TOKEN;
+  const personalAccessToken = process.env.GITHUB_TOKEN || config.githubContext.token;
 
   if (personalAccessToken.length) {
     console.log(chalk.green("TestDriver:"), '"Access Token Supplied..."');
