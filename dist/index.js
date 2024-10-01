@@ -40014,11 +40014,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   console.log(`testdriver@${pgkVersion}`);
   console.log(`testdriver-action@${testdriverBranch}`);
 
-  let prompt = process.env.IS_DEV
-    ? "open youtube"
-    : config.input.prompt.replace(/(\r\n|\n)/g, function (match) {
-        return match === "\n" ? "\\n" : "\\r\\n";
-      });
+  let prompt = process.env.IS_DEV ? "open youtube" : config.input.prompt;
 
   console.log("");
   console.log(chalk.green("Inputs"));
@@ -40034,15 +40030,19 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
       console.log(chalk.yellow("prTestFilename:"), prTestFilename);
   }
   console.log(chalk.yellow("prompt:"));
-  console.log(prompt.replace(/\\n/g, "\n").replace(/\\r\\n/g, "\r\n"));
+  console.log(prompt);
   console.log(chalk.yellow("prerun:"));
-  console.log(prerun.replace(/\\n/g, "\n").replace(/\\r\\n/g, "\r\n"));
+  console.log(prerun);
   console.log("");
 
   console.log(chalk.green("TestDriver:"), '"Looking into it..."');
   console.log(chalk.green("TestDriver:"), '"I can help ya test that!"');
 
   const personalAccessToken = process.env.GITHUB_TOKEN;
+
+  if (personalAccessToken.length) {
+    console.log(chalk.green("TestDriver:"), '"Access Token Supplied..."');
+  }
 
   console.log(chalk.green("TestDriver:"), '"Starting my engine..."');
 
@@ -40176,8 +40176,6 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   } else {
     console.log(chalk.yellow("Test:"), chalk.red("Fail"));
   }
-
-  console.log("share link before extraction", shareLink);
 
   let extractedFromMarkdown = extractLink(shareLink);
 
