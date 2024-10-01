@@ -40042,10 +40042,6 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   const personalAccessToken = process.env.GITHUB_TOKEN || config.githubContext.token;
 
   if (personalAccessToken.length) {
-    console.log(chalk.green("TestDriver:"), '"Access Token Supplied..."');  
-  }
-
-  if (personalAccessToken.length) {
     console.log(chalk.green("TestDriver:"), '"Access Token Supplied..."');
   }
 
