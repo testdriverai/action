@@ -43,6 +43,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   let userInputs = config.input.userInputs;
 
   console.log(userInputs);
+  console.log(process.env)
 
   console.log(`testdriver@${pgkVersion}`);
   console.log(`testdriver-action@${testdriverBranch}`);
