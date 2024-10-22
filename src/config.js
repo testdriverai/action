@@ -17,6 +17,7 @@ class Config {
       key: core.getInput("key"),
       os: core.getInput("os") || "windows",
       version: core.getInput("version") || "latest",
+      userInputs: core.getInput("inputs") || {},
       createPR,
       prBase: createPR ? core.getInput("pr-base") || "main" : "",
       prBranch: createPR ? core.getInput("pr-branch") : "",

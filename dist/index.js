@@ -33648,6 +33648,7 @@ class Config {
       key: core.getInput("key"),
       os: core.getInput("os") || "windows",
       version: core.getInput("version") || "latest",
+      userInputs: core.getInput("inputs") || {},
       createPR,
       prBase: createPR ? core.getInput("pr-base") || "main" : "",
       prBranch: createPR ? core.getInput("pr-branch") : "",
@@ -40011,6 +40012,9 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   let prBase = config.input.prBase;
   let prTitle = config.input.prTitle;
   let prTestFilename = config.input.prTestFilename;
+  let userInputs = config.input.userInputs;
+
+  console.log(userInputs);
 
   console.log(`testdriver@${pgkVersion}`);
   console.log(`testdriver-action@${testdriverBranch}`);
