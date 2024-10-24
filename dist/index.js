@@ -39994,7 +39994,7 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
   const baseUrl =
     (process.env.IS_DEV
       ? "http://localhost:1337"
-      : "https://replayable-api-production.herokuapp.com") + "/api/v1";
+      : "https://api.testdriver.ai") + "/api/v1";
 
   const repo = process.env.IS_DEV
     ? "replayableio/testdriver-action"
