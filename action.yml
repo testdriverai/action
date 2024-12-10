@@ -17,6 +17,15 @@ inputs:
     description: >-
       A script to run before the test.
     required: false
+  use-docker:
+    type: boolean
+    description: >-
+      Specify if the test should run in a Docker container. Defaults to "false"
+    required: false
+  docker-commands:
+    description: >-
+      Commands to run in the Linux Docker instance. Only used if use-docker is true.
+    required: false
   branch:
     description: >-
       The TestDriver branch to run. Defaults to "main"
