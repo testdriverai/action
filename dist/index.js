@@ -39990,6 +39990,21 @@ function extractLink(markdownString) {
 
 const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 
+axios.interceptors.response.use(
+  response => response,
+  error => {
+    if (axios.isAxiosError(error)) {
+      console.log(chalk.red('HTTP ERROR'))
+      console.error(error.message);
+      if (error.response) {
+        console.error("Status:", error.response.status);
+        console.error("Data:", error.response.data);
+      }
+    }
+    return Promise.reject(error); // Re-throw the error for individual handling
+  }
+);
+
 (async function () {
   const baseUrl =
     (process.env.IS_DEV
@@ -40207,6 +40222,28 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     .addSeparator()
     .addRaw(shareLink)
     .write();
+
+  
+  await axios.post(
+    `${baseUrl}/testdriver-result-create`,
+    {
+      testSuite: config.githubContext.workflow,
+      runId: config.githubContext.run_id,
+      replayUrl: extractedFromMarkdown,
+      instructions: prompt,
+      repo: config.githubContext.repo,
+      branch: config.githubContext.branch,
+      commit: config.githubContext.sha,
+      platform: os,
+      success: isPassed,
+      summary: oiResult
+    },
+    {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    }
+  );
+
 })();
 
 })();
