@@ -40015,8 +40015,8 @@ axios.interceptors.response.use(
 (async function () {
   const baseUrl =
     (process.env.IS_DEV
-      ? "https://replayable-dev-ian-mac-m1-16.ngrok.io"
-      : "https://api.testdriver.ai") + "/api/v1";
+      ? "http://localhost:1337"
+      : "https://replayable-dev-ian-mac-m1-16.ngrok.io") + "/api/v1";
 
   const repo = process.env.IS_DEV
     ? "replayableio/testdriver-action"
