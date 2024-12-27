@@ -33670,7 +33670,7 @@ class Config {
       head_ref: github.context.head_ref,
       ref: github.context.ref,
       workflow: github.context.workflow,
-      run_id: github.run_id
+      run_id: github.runId
     };
   }
 }
@@ -40015,7 +40015,7 @@ axios.interceptors.response.use(
 (async function () {
   const baseUrl =
     (process.env.IS_DEV
-      ? "http://localhost:1337"
+      ? "https://replayable-dev-ian-mac-m1-16.ngrok.io"
       : "https://api.testdriver.ai") + "/api/v1";
 
   const repo = process.env.IS_DEV
@@ -40244,7 +40244,7 @@ axios.interceptors.response.use(
       platform: os,
       success: isPassed,
       summary: oiResult,
-      verseion: testdriveraiVersion
+      version: testdriveraiVersion
     },
     {
       Accept: "application/json",
