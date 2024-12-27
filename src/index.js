@@ -265,7 +265,8 @@ axios.interceptors.response.use(
       commit: config.githubContext.sha,
       platform: os,
       success: isPassed,
-      summary: oiResult
+      summary: oiResult,
+      verseion: testdriveraiVersion
     },
     {
       Accept: "application/json",
