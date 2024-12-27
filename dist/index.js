@@ -33655,15 +33655,20 @@ class Config {
       prTestFilename: createPR ? core.getInput("pr-test-filename") : "",
     };
 
-    // the values of config.githubContext.repo.owner and config.githubContext.repo.repo are taken from
+    // the values of github.context.repo.owner and github.context.repo.repo are taken from
     // the environment variable GITHUB_REPOSITORY specified in "owner/repo" format and
     // provided by the GitHub Action on the runtime
     this.githubContext = {
-      owner: config.githubContext.repo.owner,
-      repo: config.githubContext.repo.repo,
-      issueNumber: config.githubContext.issue.number,
-      branch: config.githubContext.ref,
-      token: config.githubContext.token || github.token
+      owner: github.context.repo.owner,
+      repo: github.context.repo.repo,
+      issueNumber: github.context.issue.number,
+      branch: github.context.ref,
+      token: github.context.token || github.token,
+      sha: github.context.sha,
+      head_ref: github.context.head_ref,
+      ref: github.context.ref,
+      workflow: github.context.workflow,
+      run_id: github.context.run_id
     };
   }
 }
@@ -39973,7 +39978,6 @@ const core = __nccwpck_require__(2186);
 const config = __nccwpck_require__(4570);
 const axios = __nccwpck_require__(8757);
 const chalk = __nccwpck_require__(8818);
-const { github } = __nccwpck_require__(5438);
 
 (__nccwpck_require__(2437).config)();
 
@@ -40233,7 +40237,7 @@ axios.interceptors.response.use(
       replayUrl: extractedFromMarkdown,
       instructions: prompt,
       repo: config.githubContext.repo,
-      branch: config.githubContext.head_ref ||config.githubContext.ref,
+      branch: config.githubContext.head_ref || config.githubContext.ref,
       commit: config.githubContext.sha,
       platform: os,
       success: isPassed,
