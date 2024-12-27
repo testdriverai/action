@@ -2,7 +2,7 @@ const core = require("@actions/core");
 const config = require("./config");
 const axios = require("axios");
 const chalk = require("chalk");
-const { github } = require("@actions/github");
+const github = require("@actions/github");
 
 require("dotenv").config();
 
