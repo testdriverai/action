@@ -33655,15 +33655,15 @@ class Config {
       prTestFilename: createPR ? core.getInput("pr-test-filename") : "",
     };
 
-    // the values of github.context.repo.owner and github.context.repo.repo are taken from
+    // the values of config.githubContext.repo.owner and config.githubContext.repo.repo are taken from
     // the environment variable GITHUB_REPOSITORY specified in "owner/repo" format and
     // provided by the GitHub Action on the runtime
     this.githubContext = {
-      owner: github.context.repo.owner,
-      repo: github.context.repo.repo,
-      issueNumber: github.context.issue.number,
-      branch: github.context.ref,
-      token: github.context.token || github.token
+      owner: config.githubContext.repo.owner,
+      repo: config.githubContext.repo.repo,
+      issueNumber: config.githubContext.issue.number,
+      branch: config.githubContext.ref,
+      token: config.githubContext.token || github.token
     };
   }
 }
@@ -40228,13 +40228,13 @@ axios.interceptors.response.use(
   await axios.post(
     `${baseUrl}/testdriver-result-create`,
     {
-      testSuite: github.context.workflow,
-      runId: github.context.run_id,
+      testSuite: config.githubContext.workflow,
+      runId: config.githubContext.run_id,
       replayUrl: extractedFromMarkdown,
       instructions: prompt,
-      repo: github.context.repo,
-      branch: github.context.head_ref ||github.context.ref,
-      commit: github.context.sha,
+      repo: config.githubContext.repo,
+      branch: config.githubContext.head_ref ||config.githubContext.ref,
+      commit: config.githubContext.sha,
       platform: os,
       success: isPassed,
       summary: oiResult
