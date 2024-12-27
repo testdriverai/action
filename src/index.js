@@ -30,7 +30,7 @@ axios.interceptors.response.use(
         console.error("Data:", error.response.data);
       }
     }
-    return Promise.reject(error); // Re-throw the error for individual handling
+    // return Promise.reject(error); // Re-throw the error for individual handling
   }
 );
 
@@ -256,13 +256,13 @@ axios.interceptors.response.use(
   await axios.post(
     `${baseUrl}/testdriver-result-create`,
     {
-      testSuite: process.env.GITHUB_WORKFLOW,
+      testSuite: config.githubContext.workflow,
       runId: config.githubContext.run_id,
       replayUrl: extractedFromMarkdown,
       instructions: prompt,
       repo: config.githubContext.repo,
-      branch: config.githubContext.branch,
-      commit: process.env.GITHUB_SHA,
+      branch: config.githubContext.head_ref || config.githubContext.ref,
+      commit: config.githubContext.sha,
       platform: os,
       success: isPassed,
       summary: oiResult

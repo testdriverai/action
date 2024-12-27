@@ -40001,7 +40001,7 @@ axios.interceptors.response.use(
         console.error("Data:", error.response.data);
       }
     }
-    return Promise.reject(error); // Re-throw the error for individual handling
+    // return Promise.reject(error); // Re-throw the error for individual handling
   }
 );
 
@@ -40232,7 +40232,7 @@ axios.interceptors.response.use(
       replayUrl: extractedFromMarkdown,
       instructions: prompt,
       repo: config.githubContext.repo,
-      branch: config.githubContext.branch,
+      branch: config.githubContext.head_ref || config.githubContext.ref,
       commit: config.githubContext.sha,
       platform: os,
       success: isPassed,
