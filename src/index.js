@@ -257,13 +257,13 @@ axios.interceptors.response.use(
   await axios.post(
     `${baseUrl}/testdriver-result-create`,
     {
-      testSuite: github.context.workflow,
-      runId: github.context.run_id,
+      testSuite: config.githubContext.workflow,
+      runId: config.githubContext.run_id,
       replayUrl: extractedFromMarkdown,
       instructions: prompt,
-      repo: github.context.repo,
-      branch: github.context.head_ref ||github.context.ref,
-      commit: github.context.sha,
+      repo: config.githubContext.repo,
+      branch: config.githubContext.friendly_branch,
+      commit: config.githubContext.sha,
       platform: os,
       success: isPassed,
       summary: oiResult

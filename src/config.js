@@ -32,7 +32,11 @@ class Config {
       repo: github.context.repo.repo,
       issueNumber: github.context.issue.number,
       branch: github.context.ref,
-      token: github.context.token || github.token
+      token: github.context.token || github.token,
+      workflow: github.context.workflow,
+      run_id: github.context.run_id,
+      friendly_branch: github.context.head_ref ||github.context.ref,
+      sha: github.context.sha
     };
   }
 }
