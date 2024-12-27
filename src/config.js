@@ -33,10 +33,10 @@ class Config {
       issueNumber: github.context.issue.number,
       branch: github.context.ref,
       token: github.context.token || github.token,
+      run_id: github.context.runId,
       workflow: github.context.workflow,
-      run_id: github.context.run_id,
-      friendly_branch: github.context.head_ref ||github.context.ref,
-      sha: github.context.sha
+      sha: github.context.sha,
+      friendly_branch: github.context.ref.split("/").pop(),
     };
   }
 }
