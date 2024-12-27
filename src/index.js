@@ -256,13 +256,13 @@ axios.interceptors.response.use(
   await axios.post(
     `${baseUrl}/testdriver-result-create`,
     {
-      testSuite: config.githubContext.workflow,
+      testSuite: process.env.GITHUB_WORKFLOW,
       runId: config.githubContext.run_id,
       replayUrl: extractedFromMarkdown,
       instructions: prompt,
       repo: config.githubContext.repo,
       branch: config.githubContext.branch,
-      commit: config.githubContext.sha,
+      commit: process.env.GITHUB_SHA,
       platform: os,
       success: isPassed,
       summary: oiResult
