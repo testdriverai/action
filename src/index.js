@@ -266,7 +266,7 @@ axios.interceptors.response.use(
       platform: os,
       success: isPassed,
       summary: oiResult,
-      verseion: testdriveraiVersion
+      version: testdriveraiVersion
     },
     {
       Accept: "application/json",
