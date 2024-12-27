@@ -33668,7 +33668,7 @@ class Config {
       head_ref: github.context.head_ref,
       ref: github.context.ref,
       workflow: github.context.workflow,
-      run_id: github.context.run_id
+      run_id: github.run_id
     };
   }
 }
@@ -40241,7 +40241,8 @@ axios.interceptors.response.use(
       commit: config.githubContext.sha,
       platform: os,
       success: isPassed,
-      summary: oiResult
+      summary: oiResult,
+      verseion: testdriveraiVersion
     },
     {
       Accept: "application/json",
