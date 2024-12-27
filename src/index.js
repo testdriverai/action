@@ -260,7 +260,7 @@ axios.interceptors.response.use(
       runId: config.githubContext.run_id,
       replayUrl: extractedFromMarkdown,
       instructions: prompt,
-      repo: config.githubContext.repo,
+      repo: repo,
       branch: config.githubContext.head_ref || config.githubContext.ref,
       commit: config.githubContext.sha,
       platform: os,
