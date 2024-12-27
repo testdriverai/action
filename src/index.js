@@ -2,6 +2,7 @@ const core = require("@actions/core");
 const config = require("./config");
 const axios = require("axios");
 const chalk = require("chalk");
+const { github } = require("@actions/github");
 
 require("dotenv").config();
 
@@ -256,13 +257,13 @@ axios.interceptors.response.use(
   await axios.post(
     `${baseUrl}/testdriver-result-create`,
     {
-      testSuite: config.githubContext.workflow,
-      runId: config.githubContext.run_id,
+      testSuite: github.context.workflow,
+      runId: github.context.run_id,
       replayUrl: extractedFromMarkdown,
       instructions: prompt,
-      repo: config.githubContext.repo,
-      branch: config.githubContext.head_ref || config.githubContext.ref,
-      commit: config.githubContext.sha,
+      repo: github.context.repo,
+      branch: github.context.head_ref ||github.context.ref,
+      commit: github.context.sha,
       platform: os,
       success: isPassed,
       summary: oiResult
