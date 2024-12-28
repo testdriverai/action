@@ -37,7 +37,7 @@ class Config {
       head_ref: github.context.head_ref,
       ref: github.context.ref,
       workflow: github.context.workflow,
-      run_id: github.runId
+      run_id: github.context.runId
     };
   }
 }
