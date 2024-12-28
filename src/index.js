@@ -19,10 +19,25 @@ function extractLink(markdownString) {
 
 const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 
+axios.interceptors.response.use(
+  response => response,
+  error => {
+    if (axios.isAxiosError(error)) {
+      console.log(chalk.red('HTTP ERROR'))
+      console.error(error.message);
+      if (error.response) {
+        console.error("Status:", error.response.status);
+        console.error("Data:", error.response.data);
+      }
+    }
+    // return Promise.reject(error); // Re-throw the error for individual handling
+  }
+);
+
 (async function () {
   const baseUrl =
     (process.env.IS_DEV
-      ? "http://localhost:1337"
+      ? "http://localhost:1337"      
       : "https://api.testdriver.ai") + "/api/v1";
 
   const repo = process.env.IS_DEV
@@ -236,4 +251,27 @@ const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
     .addSeparator()
     .addRaw(shareLink)
     .write();
+
+  
+  await axios.post(
+    `${baseUrl}/testdriver-result-create`,
+    {
+      testSuite: config.githubContext.workflow,
+      runId: config.githubContext.run_id,
+      replayUrl: extractedFromMarkdown,
+      instructions: prompt,
+      repo: repo,
+      branch: config.githubContext.head_ref || config.githubContext.ref,
+      commit: config.githubContext.sha,
+      platform: os,
+      success: isPassed,
+      summary: oiResult,
+      version: testdriveraiVersion
+    },
+    {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    }
+  );
+
 })();

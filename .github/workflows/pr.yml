@@ -14,9 +14,6 @@ jobs:
         with:
           prompt: |
             1. open youtube
-            2. find a cat video
-            3. quit the browser
-            4. /summarize
           os: windows
           prerun: |
             cd $env:TEMP
