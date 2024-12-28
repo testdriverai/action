@@ -33655,8 +33655,6 @@ class Config {
       prTestFilename: createPR ? core.getInput("pr-test-filename") : "",
     };
 
-    console.log(github)
-
     // the values of github.context.repo.owner and github.context.repo.repo are taken from
     // the environment variable GITHUB_REPOSITORY specified in "owner/repo" format and
     // provided by the GitHub Action on the runtime
@@ -40015,8 +40013,8 @@ axios.interceptors.response.use(
 (async function () {
   const baseUrl =
     (process.env.IS_DEV
-      ? "http://localhost:1337"
-      : "https://replayable-dev-ian-mac-m1-16.ngrok.io") + "/api/v1";
+      ? "http://localhost:1337"      
+      : "https://api.testdriver.ai") + "/api/v1";
 
   const repo = process.env.IS_DEV
     ? "replayableio/testdriver-action"
