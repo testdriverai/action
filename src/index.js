@@ -17,6 +17,18 @@ function extractLink(markdownString) {
   }
 }
 
+// Extracts all env variables that start with TD_ 
+function extractEnv() {
+  let ret = {};
+  for (let key in process.env) {
+    if (key.startsWith('TD_')) {
+      ret[key] = process.env[key];
+    }
+  }
+
+  return ret;
+}
+
 const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 
 axios.interceptors.response.use(
@@ -56,6 +68,7 @@ axios.interceptors.response.use(
   let prTitle = config.input.prTitle;
   let prTestFilename = config.input.prTestFilename;
 
+
   console.log(`testdriver@${pgkVersion}`);
   console.log(`testdriver-action@${testdriverBranch}`);
 
@@ -90,7 +103,6 @@ axios.interceptors.response.use(
   }
 
   console.log(chalk.green("TestDriver:"), '"Starting my engine..."');
-
   const {
     data: { dispatchId },
   } = await axios.post(
@@ -111,6 +123,7 @@ axios.interceptors.response.use(
       prBase,
       prBranch,
       prTestFilename,
+      interpolationVars: extractEnv(),
     },
     {
       Accept: "application/json",
