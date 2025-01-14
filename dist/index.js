@@ -40236,17 +40236,23 @@ axios.interceptors.response.use(
   // create a github check for this run
   let octokit = getOctokit(personalAccessToken)
   
+  const { data: { sha } } = await octokit.rest.repos.getCommit({
+    owner: config.githubContext.owner,
+    repo: config.githubContext.repo,
+    ref: config.githubContext.head_ref || config.githubContext.ref,
+  });
+
   let res = await octokit.rest.checks.create({
     owner: config.githubContext.owner,
     repo: config.githubContext.repo,
     name: "TestDriver.ai",
-    head_sha: config.githubContext.head_ref || config.githubContext.sha,
+    head_sha: sha,
     status: "completed",
     conclusion: "success",
     output: {
       title: "TestDriver.ai Results",
       summary: 'demo',
-      text: 'dmeo',
+      text: 'demo',
       details_url: 'demo',
       images: [
         {
