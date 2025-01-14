@@ -258,23 +258,14 @@ axios.interceptors.response.use(
   // core.setOutput("success", isPassed);
 
   // create a github check for this run
-  let octokit = getOctokit(personalAccessToken)
-
-  const { data: pr } = await octokit.rest.pulls.list({
+  let prDetails = await octokit.rest.pulls.get({
     owner: config.githubContext.owner,
     repo: config.githubContext.repo,
-    state: 'open',
-    head: `${config.githubContext.owner}:${config.githubContext.branch}`,
+    pull_number: config.githubContext.pull_number, // Assuming you have the PR number
   });
-
-  if (!pr.length) {
-    throw new Error(`No pull request found for branch ${config.githubContext.branch}`);
-  }
   
-  const headSha = pr[0].head.sha;
-
-  console.log(headSha);
-
+  let headSha = prDetails.data.head.sha;
+  
   let res = await octokit.rest.checks.create({
     owner: config.githubContext.owner,
     repo: config.githubContext.repo,
