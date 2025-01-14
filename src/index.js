@@ -259,12 +259,20 @@ axios.interceptors.response.use(
 
   // create a github check for this run
   let octokit = getOctokit(personalAccessToken)
+
+  const pr = await octokit.rest.pulls.get({
+    owner: config.githubContext.owner,
+    repo: config.githubContext.repo,
+    pull_number: config.githubContext.pull_number,
+  });
   
+  const headSha = pr.data.head.sha;
+
   let res = await octokit.rest.checks.create({
     owner: config.githubContext.owner,
     repo: config.githubContext.repo,
     name: "TestDriver.ai",
-    head_sha: config.githubContext.sha,
+    head_sha: headSha,
     status: "completed",
     conclusion: "success",
     output: {
