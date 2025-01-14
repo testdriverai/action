@@ -40087,7 +40087,7 @@ axios.interceptors.response.use(
   });
   
   let headSha = prDetails.data.head.sha;
-  
+
   let res1 = await octokit.rest.checks.create({
     owner: config.githubContext.owner,
     repo: config.githubContext.repo,
@@ -40276,7 +40276,7 @@ axios.interceptors.response.use(
     output: {
       title: prompt,
       summary: oiResult,
-      text: markdownString,
+      text: shareLink,
       details_url: extractedFromMarkdown
     },
   });
