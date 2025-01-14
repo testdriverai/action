@@ -40234,6 +40234,8 @@ axios.interceptors.response.use(
   // core.setOutput("markdown", shareLink);
   // core.setOutput("success", isPassed);
 
+  let octokit = getOctokit(personalAccessToken);
+
   // create a github check for this run
   let prDetails = await octokit.rest.pulls.get({
     owner: config.githubContext.owner,
