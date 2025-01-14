@@ -40070,7 +40070,7 @@ axios.interceptors.response.use(
   // console.log(chalk.green("TestDriver:"), '"Looking into it..."');
   // console.log(chalk.green("TestDriver:"), '"I can help ya test that!"');
 
-  // const personalAccessToken = process.env.GITHUB_TOKEN || config.githubContext.token || undefined;
+  const personalAccessToken = process.env.GITHUB_TOKEN || config.githubContext.token || undefined;
 
   // if (personalAccessToken) {
   //   console.log(chalk.green("TestDriver:"), '"Access Token Supplied..."');
@@ -40234,7 +40234,7 @@ axios.interceptors.response.use(
   // core.setOutput("success", isPassed);
 
   // create a github check for this run
-  getOctokit().rest.checks.create({
+  getOctokit(personalAccessToken).rest.checks.create({
     owner: config.githubContext.owner,
     repo: config.githubContext.repo,
     name: "TestDriver.ai",
