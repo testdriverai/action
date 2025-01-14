@@ -40236,7 +40236,7 @@ axios.interceptors.response.use(
   // create a github check for this run
   let octokit = getOctokit(personalAccessToken)
   
-  let eres = await octokit.rest.checks.create({
+  let res = await octokit.rest.checks.create({
     owner: config.githubContext.owner,
     repo: config.githubContext.repo,
     name: "TestDriver.ai",
