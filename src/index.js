@@ -2,6 +2,7 @@ const core = require("@actions/core");
 const config = require("./config");
 const axios = require("axios");
 const chalk = require("chalk");
+const { getOctokit } = require("@actions/github");
 
 require("dotenv").config();
 
@@ -15,6 +16,16 @@ function extractLink(markdownString) {
   } else {
     return null;
   }
+}
+
+// extract a gif from a markdown string
+function extractGif(markdownString) {
+  const regex = /!\[.*?\]\((.*?\.gif)\)/;
+  const match = markdownString.match(regex);
+  if (match?.length) {
+    return match[1];
+  }
+  return null;
 }
 
 const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -224,6 +235,9 @@ axios.interceptors.response.use(
 
   let extractedFromMarkdown = extractLink(shareLink);
 
+  let gif = extractGif(shareLink); 
+  console.log(gif)
+
   console.log("");
   console.log(chalk.yellow("View Test Result on Dashcam.io:"));
 
@@ -242,6 +256,28 @@ axios.interceptors.response.use(
   core.setOutput("link", extractedFromMarkdown);
   core.setOutput("markdown", shareLink);
   core.setOutput("success", isPassed);
+
+  // create a github check for this run
+  getOctokit(personalAccessToken).checks.create({
+    owner: config.githubContext.owner,
+    repo: config.githubContext.repo,
+    name: "TestDriver.ai",
+    head_sha: config.githubContext.sha,
+    status: "completed",
+    conclusion: isPassed ? "success" : "failure",
+    output: {
+      title: "TestDriver.ai Results",
+      summary: oiResult,
+      text: extractedFromMarkdown,
+      details_url: extractedFromMarkdown,
+      images: [
+        {
+          alt: "Dashcam.io Recording",
+          image_url: gif,
+        },
+      ],
+    },
+  });
 
   await core.summary
     .addHeading("TestDriver.ai Results")
