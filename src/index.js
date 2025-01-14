@@ -266,7 +266,7 @@ axios.interceptors.response.use(
     pull_number: config.githubContext.pull_number,
   });
   
-  const headSha = pr.data.head.sha;
+  console.log(pr);
 
   let res = await octokit.rest.checks.create({
     owner: config.githubContext.owner,
