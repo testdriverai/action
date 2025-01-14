@@ -258,7 +258,7 @@ axios.interceptors.response.use(
   // core.setOutput("success", isPassed);
 
   // create a github check for this run
-  getOctokit(personalAccessToken).rest.checks.create({
+  getOctokit().rest.checks.create({
     owner: config.githubContext.owner,
     repo: config.githubContext.repo,
     name: "TestDriver.ai",
