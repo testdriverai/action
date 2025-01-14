@@ -40234,7 +40234,9 @@ axios.interceptors.response.use(
   // core.setOutput("success", isPassed);
 
   // create a github check for this run
-  getOctokit(personalAccessToken).rest.checks.create({
+  let octokit = getOctokit(personalAccessToken)
+  
+  let eres = await octokit.rest.checks.create({
     owner: config.githubContext.owner,
     repo: config.githubContext.repo,
     name: "TestDriver.ai",
@@ -40254,6 +40256,8 @@ axios.interceptors.response.use(
       ],
     },
   });
+
+  console.log(res);
 
   // await core.summary
   //   .addHeading("TestDriver.ai Results")
