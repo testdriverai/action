@@ -40234,27 +40234,16 @@ axios.interceptors.response.use(
   // core.setOutput("success", isPassed);
 
   // create a github check for this run
-  let octokit = getOctokit(personalAccessToken)
-  
-  let res = await octokit.rest.checks.create({
+  let octokit = getOctokit(personalAccessToken);
+
+  let res = await octokit.rest.repos.createCommitStatus({
     owner: config.githubContext.owner,
     repo: config.githubContext.repo,
-    name: "TestDriver.ai",
-    head_sha: config.githubContext.sha,
-    status: "completed",
-    conclusion: "success",
-    output: {
-      title: "TestDriver.ai Results",
-      summary: 'demo',
-      text: 'dmeo',
-      details_url: 'demo',
-      images: [
-        {
-          alt: "Dashcam.io Recording",
-          image_url: 'https://i.sstatic.net/SYZFJ.png?s=64',
-        },
-      ],
-    },
+    sha: config.githubContext.sha,
+    state: "success",
+    target_url: 'https://example.com/build/status',
+    description: "The build succeeded!",
+    context: "continuous-integration/testdriver",
   });
 
   console.log(res);
