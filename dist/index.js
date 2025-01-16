@@ -33668,6 +33668,7 @@ class Config {
       head_ref: github.context.head_ref,
       ref: github.context.ref,
       workflow: github.context.workflow,
+      pull_number: github.context.payload.pull_request?.number,
       run_id: github.context.runId
     };
   }
@@ -39978,6 +39979,7 @@ const core = __nccwpck_require__(2186);
 const config = __nccwpck_require__(4570);
 const axios = __nccwpck_require__(8757);
 const chalk = __nccwpck_require__(8818);
+const { getOctokit } = __nccwpck_require__(5438);
 
 (__nccwpck_require__(2437).config)();
 
@@ -39991,6 +39993,16 @@ function extractLink(markdownString) {
   } else {
     return null;
   }
+}
+
+// extract a gif from a markdown string
+function extractGif(markdownString) {
+  const regex = /!\[.*?\]\((.*?\.gif)\)/;
+  const match = markdownString.match(regex);
+  if (match?.length) {
+    return match[1];
+  }
+  return null;
 }
 
 const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -40064,6 +40076,27 @@ axios.interceptors.response.use(
   if (personalAccessToken) {
     console.log(chalk.green("TestDriver:"), '"Access Token Supplied..."');
   }
+
+  let octokit = getOctokit(personalAccessToken);
+
+  // create a github check for this run
+  let prDetails = await octokit.rest.pulls.get({
+    owner: config.githubContext.owner,
+    repo: config.githubContext.repo,
+    pull_number: config.githubContext.pull_number, // Assuming you have the PR number
+  });
+  
+  let headSha = prDetails.data.head.sha;
+
+  let res1 = await octokit.rest.checks.create({
+    owner: config.githubContext.owner,
+    repo: config.githubContext.repo,
+    name: "TestDriver.ai",
+    head_sha: headSha,
+    status: "queued",
+  });
+  
+  console.log(res1);
 
   console.log(chalk.green("TestDriver:"), '"Starting my engine..."');
 
@@ -40146,6 +40179,17 @@ axios.interceptors.response.use(
 
   console.log(chalk.green("TestDriver:"), '"Let\'s Go!!!"');
 
+  let res2 = await octokit.rest.checks.create({
+    owner: config.githubContext.owner,
+    repo: config.githubContext.repo,
+    name: "TestDriver.ai",
+    head_sha: headSha,
+    status: "in_progress",
+  });
+  
+  console.log(res2);
+  
+
   const waitUntilComplete = async () => {
     let { status, conclusion } = await checkStatus();
 
@@ -40200,6 +40244,9 @@ axios.interceptors.response.use(
 
   let extractedFromMarkdown = extractLink(shareLink);
 
+  let gif = extractGif(shareLink); 
+  console.log(gif)
+
   console.log("");
   console.log(chalk.yellow("View Test Result on Dashcam.io:"));
 
@@ -40218,6 +40265,23 @@ axios.interceptors.response.use(
   core.setOutput("link", extractedFromMarkdown);
   core.setOutput("markdown", shareLink);
   core.setOutput("success", isPassed);
+
+  let res = await octokit.rest.checks.create({
+    owner: config.githubContext.owner,
+    repo: config.githubContext.repo,
+    name: "TestDriver.ai",
+    head_sha: headSha,
+    status: "completed",
+    conclusion: isPassed ? "success" : "failure",
+    output: {
+      title: prompt,
+      summary: oiResult,
+      text: shareLink,
+      details_url: extractedFromMarkdown
+    },
+  });
+
+  console.log(res);
 
   await core.summary
     .addHeading("TestDriver.ai Results")
