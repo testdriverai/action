@@ -51,7 +51,7 @@ jobs:
     name: "TestDriver"
     runs-on: ubuntu-latest
     steps:
-      - uses: replayableio/testdriver-action@main
+      - uses: testdriverai/action@main
         id: testdriver
         with:
           prompt: |
