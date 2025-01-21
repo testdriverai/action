@@ -116,7 +116,7 @@ axios.interceptors.response.use(
     repo: config.githubContext.repo,
     name: "TestDriver.ai " + prompt,
     head_sha: headSha,
-    status: "queued",
+    status: "requested",
   });
   
   const checkRunId = res1.data.id;
