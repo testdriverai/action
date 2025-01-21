@@ -24,7 +24,7 @@ class Config {
       prTestFilename: createPR ? core.getInput("pr-test-filename") : "",
     };
 
-    console.log(github)
+    console.log(github.context.payload?.pull_request)
 
     // the values of github.context.repo.owner and github.context.repo.repo are taken from
     // the environment variable GITHUB_REPOSITORY specified in "owner/repo" format and
@@ -35,7 +35,7 @@ class Config {
       issueNumber: github.context.issue.number,
       branch: github.context.ref,
       token: github.context.token || github.token,
-      sha: github.context.event?.pull_request?.head.sha || github.context.sha,
+      sha: github.context.payload?.pull_request?.head.sha || github.context.sha,
       head_ref: github.context.head_ref,
       ref: github.context.ref,
       workflow: github.context.workflow,
