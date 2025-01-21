@@ -111,16 +111,6 @@ axios.interceptors.response.use(
   
   let headSha = prDetails.data.head.sha;
 
-  let res1 = await octokit.rest.checks.create({
-    owner: config.githubContext.owner,
-    repo: config.githubContext.repo,
-    name: "TestDriver.ai /" + prompt,
-    head_sha: headSha,
-    status: "queued",
-  });
-  
-  const checkRunId = res1.data.id;
-
   console.log(chalk.green("TestDriver:"), '"Starting my engine..."');
 
   const {
@@ -202,13 +192,6 @@ axios.interceptors.response.use(
 
   console.log(chalk.green("TestDriver:"), '"Let\'s Go!!!"');
 
-  let res2 = await octokit.rest.checks.update({
-    check_run_id: checkRunId,
-    owner: config.githubContext.owner,
-    repo: config.githubContext.repo,
-    status: "in_progress",
-  });
-
   const waitUntilComplete = async () => {
     let { status, conclusion } = await checkStatus();
 
@@ -284,18 +267,14 @@ axios.interceptors.response.use(
   core.setOutput("markdown", shareLink);
   core.setOutput("success", isPassed);
 
-  let res = await octokit.rest.checks.update({
-    check_run_id: checkRunId,
+  let res1 = await octokit.repos.createCommitStatus({
     owner: config.githubContext.owner,
     repo: config.githubContext.repo,
-    status: "completed",
-    conclusion: isPassed ? "success" : "failure",
-    details_url: extractedFromMarkdown,
-    output: {
-      title: prompt,
-      summary: oiResult,
-      text: shareLink,
-    },
+    sha: headSha,
+    state: isPassed ? "success" : "failure",
+    target_url: extractedFromMarkdown,
+    description: prompt,
+    context: "TestDriver.ai",
   });
 
   await core.summary
