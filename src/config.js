@@ -33,7 +33,7 @@ class Config {
       issueNumber: github.context.issue.number,
       branch: github.context.ref,
       token: github.context.token || github.token,
-      sha: github.event.pull_request ? github.event.pull_request.head.sha : github.context.sha,
+      sha: github.event.pull_request?.head.sha || github.context.sha,
       head_ref: github.context.head_ref,
       ref: github.context.ref,
       workflow: github.context.workflow,
