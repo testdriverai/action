@@ -102,15 +102,6 @@ axios.interceptors.response.use(
 
   let octokit = getOctokit(personalAccessToken);
 
-  // create a github check for this run
-  let prDetails = await octokit.rest.pulls.get({
-    owner: config.githubContext.owner,
-    repo: config.githubContext.repo,
-    pull_number: config.githubContext.pull_number, // Assuming you have the PR number
-  });
-  
-  let headSha = prDetails.data.head.sha;
-
   console.log(chalk.green("TestDriver:"), '"Starting my engine..."');
 
   const {
@@ -272,7 +263,7 @@ axios.interceptors.response.use(
   let res1 = await octokit.rest.repos.createCommitStatus({
     owner: config.githubContext.owner,
     repo: config.githubContext.repo,
-    sha: headSha,
+    sha: config.githubContext.sha,
     state: isPassed ? "success" : "failure",
     target_url: extractedFromMarkdown,
     description: prompt,
