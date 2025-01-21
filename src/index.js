@@ -2,6 +2,7 @@ const core = require("@actions/core");
 const config = require("./config");
 const axios = require("axios");
 const chalk = require("chalk");
+const { getOctokit } = require("@actions/github");
 
 require("dotenv").config();
 
@@ -15,6 +16,16 @@ function extractLink(markdownString) {
   } else {
     return null;
   }
+}
+
+// extract a gif from a markdown string
+function extractGif(markdownString) {
+  const regex = /!\[.*?\]\((.*?\.gif)\)/;
+  const match = markdownString.match(regex);
+  if (match?.length) {
+    return match[1];
+  }
+  return null;
 }
 
 const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -88,6 +99,17 @@ axios.interceptors.response.use(
   if (personalAccessToken) {
     console.log(chalk.green("TestDriver:"), '"Access Token Supplied..."');
   }
+
+  let octokit = getOctokit(personalAccessToken);
+
+  // create a github check for this run
+  let prDetails = await octokit.rest.pulls.get({
+    owner: config.githubContext.owner,
+    repo: config.githubContext.repo,
+    pull_number: config.githubContext.pull_number, // Assuming you have the PR number
+  });
+  
+  let headSha = prDetails.data.head.sha;
 
   console.log(chalk.green("TestDriver:"), '"Starting my engine..."');
 
@@ -224,6 +246,8 @@ axios.interceptors.response.use(
 
   let extractedFromMarkdown = extractLink(shareLink);
 
+  let gif = extractGif(shareLink); 
+
   console.log("");
   console.log(chalk.yellow("View Test Result on Dashcam.io:"));
 
@@ -242,6 +266,16 @@ axios.interceptors.response.use(
   core.setOutput("link", extractedFromMarkdown);
   core.setOutput("markdown", shareLink);
   core.setOutput("success", isPassed);
+
+  let res1 = await octokit.rest.repos.createCommitStatus({
+    owner: config.githubContext.owner,
+    repo: config.githubContext.repo,
+    sha: headSha,
+    state: isPassed ? "success" : "failure",
+    target_url: extractedFromMarkdown,
+    description: prompt,
+    context: "TestDriver.ai",
+  });
 
   await core.summary
     .addHeading("TestDriver.ai Results")
