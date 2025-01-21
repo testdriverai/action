@@ -114,14 +114,12 @@ axios.interceptors.response.use(
   let res1 = await octokit.rest.checks.create({
     owner: config.githubContext.owner,
     repo: config.githubContext.repo,
-    name: "TestDriver.ai",
+    name: "TestDriver.ai " + prompt,
     head_sha: headSha,
     status: "queued",
   });
   
   const checkRunId = res1.data.id;
-
-  console.log(res1);
 
   console.log(chalk.green("TestDriver:"), '"Starting my engine..."');
 
@@ -264,7 +262,6 @@ axios.interceptors.response.use(
   let extractedFromMarkdown = extractLink(shareLink);
 
   let gif = extractGif(shareLink); 
-  console.log(gif)
 
   console.log("");
   console.log(chalk.yellow("View Test Result on Dashcam.io:"));
@@ -289,15 +286,13 @@ axios.interceptors.response.use(
     check_run_id: checkRunId,
     status: "completed",
     conclusion: isPassed ? "success" : "failure",
+    details_url: extractedFromMarkdown,
     output: {
       title: prompt,
       summary: oiResult,
       text: shareLink,
-      details_url: extractedFromMarkdown
     },
   });
-
-  console.log(res);
 
   await core.summary
     .addHeading("TestDriver.ai Results")
