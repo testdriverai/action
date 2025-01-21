@@ -41198,7 +41198,7 @@ axios.interceptors.response.use(
     let status = response.data.status;
     let conclusion = response.data.conclusion;
 
-    console.log(checkStatus)
+    console.log(response.data.logs)
 
     return { status, conclusion };
   };
