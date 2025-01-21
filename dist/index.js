@@ -41125,7 +41125,7 @@ axios.interceptors.response.use(
   let res1 = await octokit.rest.checks.create({
     owner: config.githubContext.owner,
     repo: config.githubContext.repo,
-    name: "TestDriver.ai " + prompt,
+    name: "TestDriver.ai /" + prompt,
     head_sha: headSha,
     status: "queued",
   });
@@ -41215,6 +41215,8 @@ axios.interceptors.response.use(
 
   let res2 = await octokit.rest.checks.update({
     check_run_id: checkRunId,
+    owner: config.githubContext.owner,
+    repo: config.githubContext.repo,
     status: "in_progress",
   });
 
@@ -41295,6 +41297,8 @@ axios.interceptors.response.use(
 
   let res = await octokit.rest.checks.update({
     check_run_id: checkRunId,
+    owner: config.githubContext.owner,
+    repo: config.githubContext.repo,
     status: "completed",
     conclusion: isPassed ? "success" : "failure",
     details_url: extractedFromMarkdown,
