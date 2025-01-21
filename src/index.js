@@ -267,7 +267,7 @@ axios.interceptors.response.use(
   core.setOutput("markdown", shareLink);
   core.setOutput("success", isPassed);
 
-  let res1 = await octokit.repos.createCommitStatus({
+  let res1 = await octokit.rest.repos.createCommitStatus({
     owner: config.githubContext.owner,
     repo: config.githubContext.repo,
     sha: headSha,
