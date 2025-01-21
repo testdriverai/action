@@ -34689,6 +34689,8 @@ class Config {
       prTestFilename: createPR ? core.getInput("pr-test-filename") : "",
     };
 
+    console.log(github.context.payload?.pull_request)
+
     // the values of github.context.repo.owner and github.context.repo.repo are taken from
     // the environment variable GITHUB_REPOSITORY specified in "owner/repo" format and
     // provided by the GitHub Action on the runtime
@@ -34698,11 +34700,10 @@ class Config {
       issueNumber: github.context.issue.number,
       branch: github.context.ref,
       token: github.context.token || github.token,
-      sha: github.context.sha,
+      sha: github.context.payload?.pull_request?.head.sha || github.context.sha,
       head_ref: github.context.head_ref,
       ref: github.context.ref,
       workflow: github.context.workflow,
-      pull_number: github.context.payload.pull_request?.number,
       run_id: github.context.runId
     };
   }
@@ -41059,7 +41060,7 @@ axios.interceptors.response.use(
 (async function () {
   const baseUrl =
     (process.env.IS_DEV
-      ? "http://localhost:1337"      
+      ? "https://localhost:1337" + "api/v1"      
       : "https://api.testdriver.ai") + "/api/v1";
 
   const repo = process.env.IS_DEV
@@ -41112,15 +41113,6 @@ axios.interceptors.response.use(
   }
 
   let octokit = getOctokit(personalAccessToken);
-
-  // create a github check for this run
-  let prDetails = await octokit.rest.pulls.get({
-    owner: config.githubContext.owner,
-    repo: config.githubContext.repo,
-    pull_number: config.githubContext.pull_number, // Assuming you have the PR number
-  });
-  
-  let headSha = prDetails.data.head.sha;
 
   console.log(chalk.green("TestDriver:"), '"Starting my engine..."');
 
@@ -41281,7 +41273,7 @@ axios.interceptors.response.use(
   let res1 = await octokit.rest.repos.createCommitStatus({
     owner: config.githubContext.owner,
     repo: config.githubContext.repo,
-    sha: headSha,
+    sha: config.githubContext.sha,
     state: isPassed ? "success" : "failure",
     target_url: extractedFromMarkdown,
     description: prompt,
