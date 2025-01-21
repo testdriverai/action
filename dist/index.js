@@ -34703,7 +34703,6 @@ class Config {
       ref: github.context.ref,
       workflow: github.context.workflow,
       pull_number: github.context.payload.pull_request?.number,
-      head_sha: github.context.payload.pull_request?.head.sha,
       run_id: github.context.runId
     };
   }
@@ -41060,7 +41059,7 @@ axios.interceptors.response.use(
 (async function () {
   const baseUrl =
     (process.env.IS_DEV
-      ? "https://replayable-dev-ian-mac-m1-16.ngrok.io/" + "api/v1"      
+      ? "https://localhost:1337" + "api/v1"      
       : "https://api.testdriver.ai") + "/api/v1";
 
   const repo = process.env.IS_DEV
