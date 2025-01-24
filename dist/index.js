@@ -866,7 +866,7 @@ formatters.O = function (v) {
 
 /***/ }),
 
-/***/ 8818:
+/***/ 7404:
 /***/ ((module) => {
 
 "use strict";
@@ -1058,7 +1058,7 @@ function plural(ms, msAbs, n, name) {
 
 const os = __nccwpck_require__(2037);
 const tty = __nccwpck_require__(6224);
-const hasFlag = __nccwpck_require__(8818);
+const hasFlag = __nccwpck_require__(7404);
 
 const {env} = process;
 
@@ -8414,7 +8414,7 @@ function removeHook(state, name, method) {
 
 /***/ }),
 
-/***/ 3040:
+/***/ 8818:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
@@ -34824,6 +34824,7 @@ function wrappy (fn, cb) {
 
 const core = __nccwpck_require__(2186);
 const github = __nccwpck_require__(5438);
+const chalk = __nccwpck_require__(8818);
 
 class Config {
   constructor() {
@@ -34847,6 +34848,40 @@ class Config {
       prTitle: createPR ? core.getInput("pr-title") : "",
       prTestFilename: createPR ? core.getInput("pr-test-filename") : "",
     };
+
+    let branchInfo = () => {
+
+
+      let sha = github.context.sha;
+      let ref = github.context.ref;
+      let context = '';
+      
+      if (github.context.event_name == "workflow_run") {
+        context = 'workflow_run';
+        sha = github.context.event.workflow_run.pull_requests[0].head.sha;
+        ref = github.context.event.workflow_run.pull_requests[0].head.ref;
+      } else if (github.context.payload?.pull_request) {
+        context = 'pull_request';
+        sha = github.context.payload.pull_request.head.sha;
+        ref = github.context.payload.pull_request.head.ref;
+      } else {
+        context = 'default'
+        sha = github.context.sha;
+        ref = github.context.ref;
+      }
+      
+      let res = {sha, ref, context};
+
+      console.log("");
+      console.log(chalk.green("Context"));
+      console.log(chalk.yellow("method:"), context);
+      console.log(chalk.yellow("ref:"), ref);
+      console.log(chalk.yellow("sha:"), sha);
+
+      return res;
+    }
+
+    let {sha, ref, context} = branchInfo();
     
     // the values of github.context.repo.owner and github.context.repo.repo are taken from
     // the environment variable GITHUB_REPOSITORY specified in "owner/repo" format and
@@ -34857,9 +34892,8 @@ class Config {
       issueNumber: github.context.issue.number,
       branch: github.context.ref,
       token: github.context.token || github.token,
-      sha: github.context.payload?.pull_request?.head.sha || github.context.sha,
-      head_ref: github.context.head_ref,
-      ref: github.context.ref,
+      sha,
+      ref,
       workflow: github.context.workflow,
       run_id: github.context.runId
     };
@@ -41162,7 +41196,7 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(2186);
 const config = __nccwpck_require__(4570);
 const axios = __nccwpck_require__(8757);
-const chalk = __nccwpck_require__(3040);
+const chalk = __nccwpck_require__(8818);
 const { getOctokit } = __nccwpck_require__(5438);
 
 (__nccwpck_require__(2437).config)();
@@ -41228,6 +41262,7 @@ axios.interceptors.response.use(
   let prTitle = config.input.prTitle;
   let prTestFilename = config.input.prTestFilename;
 
+  console.log(chalk.green("Version"));
   console.log(`testdriver@${pgkVersion}`);
   console.log(`testdriver-action@${testdriverBranch}`);
 
@@ -41447,7 +41482,7 @@ axios.interceptors.response.use(
       replayUrl: extractedFromMarkdown,
       instructions: prompt,
       repo: repo,
-      branch: config.githubContext.head_ref || config.githubContext.ref,
+      branch: config.githubContext.ref,
       commit: config.githubContext.sha,
       platform: os,
       success: isPassed,

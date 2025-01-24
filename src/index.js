@@ -67,6 +67,7 @@ axios.interceptors.response.use(
   let prTitle = config.input.prTitle;
   let prTestFilename = config.input.prTestFilename;
 
+  console.log(chalk.green("Version"));
   console.log(`testdriver@${pgkVersion}`);
   console.log(`testdriver-action@${testdriverBranch}`);
 
@@ -286,7 +287,7 @@ axios.interceptors.response.use(
       replayUrl: extractedFromMarkdown,
       instructions: prompt,
       repo: repo,
-      branch: config.githubContext.head_ref || config.githubContext.ref,
+      branch: config.githubContext.ref,
       commit: config.githubContext.sha,
       platform: os,
       success: isPassed,
