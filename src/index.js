@@ -286,7 +286,7 @@ axios.interceptors.response.use(
       replayUrl: extractedFromMarkdown,
       instructions: prompt,
       repo: repo,
-      branch: config.githubContext.head_ref || config.githubContext.ref,
+      branch: config.githubContext.ref,
       commit: config.githubContext.sha,
       platform: os,
       success: isPassed,
