@@ -32,10 +32,10 @@ class Config {
       let ref = github.context.ref;
       let context = '';
       
-      if (github.context.payload?.pull_requests) {
+      if (github.context.event_name == "workflow_run") {
         context = 'workflow_run';
-        sha = github.context.payload.pull_requests[0].head.sha;
-        ref = github.context.payload.pull_requests[0].head.ref;
+        sha = github.context.event.workflow_run.pull_requests[0].head.sha;
+        ref = github.context.event.workflow_run.pull_requests[0].head.ref;
       } else if (github.context.payload?.pull_request) {
         context = 'pull_request';
         sha = github.context.payload.pull_request.head.sha;
