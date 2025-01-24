@@ -41262,6 +41262,7 @@ axios.interceptors.response.use(
   let prTitle = config.input.prTitle;
   let prTestFilename = config.input.prTestFilename;
 
+  console.log(chalk.green("Version"));
   console.log(`testdriver@${pgkVersion}`);
   console.log(`testdriver-action@${testdriverBranch}`);
 
