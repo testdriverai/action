@@ -25,30 +25,33 @@ class Config {
     };
 
     let branchInfo = () => {
-      
+
+
       let sha = github.context.sha;
       let ref = github.context.ref;
+      let context = '';
       
-      console.log("Executin Context:");
-
       if (github.context.payload?.pull_requests) {
-        console.log("Pull Requests [0]");
+        context = 'workflow_run';
         sha = github.context.payload.pull_requests[0].head.sha;
         ref = github.context.payload.pull_requests[0].head.ref;
       } else if (github.context.payload?.pull_request) {
-        console.log("Pull Request");
+        context = 'pull_request';
         sha = github.context.payload.pull_request.head.sha;
         ref = github.context.payload.pull_request.head.ref;
       } else {
-        console.log("Root Context");
+        context = 'default'
         sha = github.context.sha;
         ref = github.context.ref;
       }
       
-      let res = {sha, ref};
+      let res = {sha, ref, context};
 
-      console.log("Returning:")
-      console.log(res);
+      console.log("");
+      console.log(chalk.green("Context"));
+      console.log(chalk.yellow("method:"), context);
+      console.log(chalk.yellow("ref:"), ref);
+      console.log(chalk.yellow("sha:"), sha);
 
       return res;
     }
