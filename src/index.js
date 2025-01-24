@@ -264,7 +264,7 @@ axios.interceptors.response.use(
     sha: config.githubContext.sha,
     state: isPassed ? "success" : "failure",
     target_url: extractedFromMarkdown,
-    description: prompt,
+    description: prompt.length > 127 ? prompt.substring(0, 127) + "..." : prompt,
     context: "TestDriver.ai",
   });
 
