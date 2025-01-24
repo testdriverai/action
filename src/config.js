@@ -1,5 +1,6 @@
 const core = require("@actions/core");
 const github = require("@actions/github");
+const chalk = require("chalk");
 
 class Config {
   constructor() {

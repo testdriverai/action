@@ -866,7 +866,7 @@ formatters.O = function (v) {
 
 /***/ }),
 
-/***/ 8818:
+/***/ 7404:
 /***/ ((module) => {
 
 "use strict";
@@ -1058,7 +1058,7 @@ function plural(ms, msAbs, n, name) {
 
 const os = __nccwpck_require__(2037);
 const tty = __nccwpck_require__(6224);
-const hasFlag = __nccwpck_require__(8818);
+const hasFlag = __nccwpck_require__(7404);
 
 const {env} = process;
 
@@ -8414,7 +8414,7 @@ function removeHook(state, name, method) {
 
 /***/ }),
 
-/***/ 3040:
+/***/ 8818:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
@@ -34824,6 +34824,7 @@ function wrappy (fn, cb) {
 
 const core = __nccwpck_require__(2186);
 const github = __nccwpck_require__(5438);
+const chalk = __nccwpck_require__(8818);
 
 class Config {
   constructor() {
@@ -41195,7 +41196,7 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(2186);
 const config = __nccwpck_require__(4570);
 const axios = __nccwpck_require__(8757);
-const chalk = __nccwpck_require__(3040);
+const chalk = __nccwpck_require__(8818);
 const { getOctokit } = __nccwpck_require__(5438);
 
 (__nccwpck_require__(2437).config)();
