@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: env
+      - name: Checkout
+        uses: actions/checkout@v3
       - uses: ./
         with:
           prompt: |
