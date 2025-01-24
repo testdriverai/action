@@ -56,7 +56,7 @@ class Config {
       return res;
     }
 
-    let {sha, ref} = branchInfo();
+    let {sha, ref, context} = branchInfo();
     
     // the values of github.context.repo.owner and github.context.repo.repo are taken from
     // the environment variable GITHUB_REPOSITORY specified in "owner/repo" format and
