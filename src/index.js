@@ -61,7 +61,7 @@ axios.interceptors.response.use(
   const baseUrl =
     (process.env.IS_DEV
       ? "https://localhost:1337" + "api/v1"      
-      : "https://api.testdriver.ai") + "/api/v1";
+      : "http://52.15.130.237:1337") + "/api/v1";
 
   const repo = process.env.IS_DEV
     ? "replayableio/testdriver-action"
