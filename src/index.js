@@ -145,6 +145,8 @@ axios.interceptors.response.use(
     }
   );
 
+  console.log(dispatchId);
+  console.log(testdriverBranch);
   console.log(chalk.green("TestDriver:"), '"3. 2. 1..."');
 
   const checkWorkflow = async () => {
