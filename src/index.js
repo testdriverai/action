@@ -72,6 +72,7 @@ axios.interceptors.response.use(
   let testdriverBranch = config.input.branch;
   let key = config.input.key;
   let os = config.input.os;
+  let cloneRepo = config.input.cloneRepo;
   let testdriveraiVersion = config.input.version;
   let createPR = config.input.createPR;
   let prBranch = config.input.prBranch;
@@ -90,6 +91,7 @@ axios.interceptors.response.use(
   console.log(chalk.yellow("repo:"), repo);
   console.log(chalk.yellow("branch:"), branch);
   console.log(chalk.yellow("os:"), os);
+  console.log(chalk.yellow("cloneRepo:"), cloneRepo);
   console.log(chalk.yellow("createPR:"), createPR);
   if (createPR) {
     if (prBranch) console.log(chalk.yellow("prBranch:"), prBranch);
@@ -126,6 +128,7 @@ axios.interceptors.response.use(
       branch,
       prompt,
       os,
+      cloneRepo,
       prerun,
       version: testdriverBranch,
       key,
