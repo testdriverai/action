@@ -40,10 +40,12 @@ inputs:
     default: "false"
     required: false
   clone-repo:
-    description: "Whether to clone the repository"
+    type: boolean
+    description: >-
+      Whether to clone the repository, defaults to "true"
+      Used for desktop app testing
     required: false
     default: "true"
-    type: boolean
   pr-title:
     description: >-
       The title of the PR to be created
