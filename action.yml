@@ -39,6 +39,11 @@ inputs:
       Specify if a PR should be created with the updated test results. Defaults to "false"
     default: "false"
     required: false
+  clone-repo:
+    description: "Whether to clone the repository"
+    required: false
+    default: "true"
+    type: boolean
   pr-title:
     description: >-
       The title of the PR to be created
