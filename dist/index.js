@@ -41264,7 +41264,6 @@ axios.interceptors.response.use(
   const branch = process.env.IS_DEV ? "main" : config.githubContext.branch;
 
   let prerun = config.input.prerun;
-  let testdriverBranch = config.input.branch;
   let key = config.input.key;
   let os = config.input.os;
   let testdriveraiVersion = config.input.version;
@@ -41275,8 +41274,8 @@ axios.interceptors.response.use(
   let prTestFilename = config.input.prTestFilename;
 
   console.log(chalk.green("Version"));
-  console.log(`testdriver@${testdriveraiVersion}`);
-  console.log(`testdriver-action@${pgkVersion}`);
+  console.log(`testdriverai/testdriverai@${testdriveraiVersion}`);
+  console.log(`testdriverai/action@${pgkVersion}`);
 
   let prompt = process.env.IS_DEV ? "open youtube" : config.input.prompt;
 
@@ -41349,8 +41348,7 @@ axios.interceptors.response.use(
     } = await axios.post(
       `${baseUrl}/testdriver-workflow`,
       {
-        dispatchId,
-        branch: testdriverBranch,
+        dispatchId
       },
       {
         Accept: "application/json",
