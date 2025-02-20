@@ -167,7 +167,7 @@ axios.interceptors.response.use(
   const waitUntilWorkflowAvailable = async () => {
     let workflowId;
     while (!workflowId) {
-      await waitFor(1000 * 60 * 2);
+      await waitFor(1000 * 60);
       workflowId = await checkWorkflow();
     }
 
