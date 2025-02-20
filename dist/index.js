@@ -40090,8 +40090,8 @@ axios.interceptors.response.use(
   let prTestFilename = config.input.prTestFilename;
 
   console.log(chalk.green("Version"));
-  console.log(`testdriver@${pgkVersion}`);
-  console.log(`testdriver-action@${testdriverBranch}`);
+  console.log(`testdriver@${testdriveraiVersion}`);
+  console.log(`testdriver-action@${pgkVersion}`);
 
   let prompt = process.env.IS_DEV ? "open youtube" : config.input.prompt;
 
@@ -40137,7 +40137,7 @@ axios.interceptors.response.use(
       prompt,
       os,
       prerun,
-      version: testdriverBranch,
+      version: testdriveraiVersion,
       key,
       os,
       personalAccessToken,
@@ -40180,7 +40180,7 @@ axios.interceptors.response.use(
   const waitUntilWorkflowAvailable = async () => {
     let workflowId;
     while (!workflowId) {
-      await waitFor(1000 * 60);
+      await waitFor(1000 * 60 * 2);
       workflowId = await checkWorkflow();
     }
 
