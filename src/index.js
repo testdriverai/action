@@ -127,7 +127,6 @@ axios.interceptors.response.use(
       prompt,
       os,
       prerun,
-      version: testdriveraiVersion,
       key,
       os,
       personalAccessToken,
