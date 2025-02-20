@@ -28,6 +28,18 @@ function extractGif(markdownString) {
   return null;
 }
 
+  // Extracts all env variables that start with TD_
+function extractEnv() {
+  let ret = {};
+  for (let key in process.env) {
+    if (key.startsWith('TD_')) {
+      ret[key] = process.env[key];
+    }
+  }
+
+  return ret;
+}
+
 const waitFor = (ms) => new Promise((r) => setTimeout(r, ms));
 
 axios.interceptors.response.use(
@@ -125,6 +137,7 @@ axios.interceptors.response.use(
       prBase,
       prBranch,
       prTestFilename,
+      interpolationVars: JSON.stringify(extractEnv()),
     },
     {
       Accept: "application/json",
