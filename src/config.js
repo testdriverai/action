@@ -14,7 +14,7 @@ class Config {
     this.input = {
       prompt: core.getInput("prompt"),
       prerun: core.getInput("prerun"),
-      branch: core.getInput("branch") || "main",
+      branch: core.getInput("branch") ,
       key: core.getInput("key"),
       os: core.getInput("os") || "windows",
       version: core.getInput("version") || "latest",

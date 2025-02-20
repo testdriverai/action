@@ -34838,7 +34838,7 @@ class Config {
     this.input = {
       prompt: core.getInput("prompt"),
       prerun: core.getInput("prerun"),
-      branch: core.getInput("branch") || "main",
+      branch: core.getInput("branch") ,
       key: core.getInput("key"),
       os: core.getInput("os") || "windows",
       version: core.getInput("version") || "latest",
@@ -41261,7 +41261,7 @@ axios.interceptors.response.use(
   const repo = process.env.IS_DEV
     ? "replayableio/testdriver-action"
     : config.githubContext.owner + "/" + config.githubContext.repo;
-  const branch = process.env.IS_DEV ? "main" : config.githubContext.branch;
+  const branch = config.input.branch | config.githubContext.branch | "main";
 
   let prerun = config.input.prerun;
   let key = config.input.key;
