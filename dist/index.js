@@ -41261,7 +41261,7 @@ axios.interceptors.response.use(
   const repo = process.env.IS_DEV
     ? "replayableio/testdriver-action"
     : config.githubContext.owner + "/" + config.githubContext.repo;
-  const branch = config.input.branch | config.githubContext.branch | "main";
+  const branch = config.input.branch || config.githubContext.branch || "main";
 
   let prerun = config.input.prerun;
   let key = config.input.key;
