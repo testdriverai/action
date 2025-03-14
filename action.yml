@@ -67,6 +67,9 @@ outputs:
   markdown:
     description: >-
       A hotlinked image of the Dashcam.io recording
+  success:
+    description: >-
+      Whether the test passed or failed
 runs:
   using: node16
   main: ./dist/index.js
