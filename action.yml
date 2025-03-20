@@ -27,7 +27,7 @@ inputs:
     required: false
   os:
     description: >-
-      The operating system to run tests on. Defaults to "windows". Can be either "windows" or "mac"
+      The operating system to run tests on. Defaults to "windows". Can be "windows", "linux", or "mac"
     required: false
   version:
     description: >-

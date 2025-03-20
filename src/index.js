@@ -251,7 +251,7 @@ axios.interceptors.response.use(
   let gif = extractGif(shareLink); 
 
   console.log("");
-  console.log(chalk.yellow("View Test Result on Dashcam.io:"));
+  console.log(chalk.yellow("View Test Result on TestDriver.ai:"));
 
   if (extractedFromMarkdown) {
     console.log(extractedFromMarkdown);
