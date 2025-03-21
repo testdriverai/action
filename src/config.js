@@ -5,10 +5,12 @@ const chalk = require("chalk");
 class Config {
   constructor() {
     let createPR = core.getInput("create-pr")?.toLowerCase()?.trim() || "false";
-    if (!["true", "false"].includes(createPR)) {
-      throw new Error("Invalid value for create-pr. It should be a boolean");
+    let cloneRepo = core.getInput("clone-repo")?.toLowerCase()?.trim() || "true";
+    if (!["true", "false"].includes(createPR) || !["true", "false"].includes(cloneRepo)) {
+      throw new Error("Invalid value for create-pr or clone-repo. They should be booleans");
     } else {
       createPR = JSON.parse(createPR);
+      cloneRepo = JSON.parse(cloneRepo);
     }
 
     this.input = {
@@ -19,6 +21,7 @@ class Config {
       os: core.getInput("os") || "windows",
       version: core.getInput("version") || "latest",
       createPR,
+      cloneRepo,
       prBase: createPR ? core.getInput("pr-base") || "main" : "",
       prBranch: createPR ? core.getInput("pr-branch") : "",
       prTitle: createPR ? core.getInput("pr-title") : "",
