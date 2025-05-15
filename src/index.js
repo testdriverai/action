@@ -121,6 +121,7 @@ axios.interceptors.response.use(
   } = await axios.post(
     `${baseUrl}/testdriver-dispatch`,
     {
+      version: "alexrowe/dev",
       repo,
       branch,
       prompt,
