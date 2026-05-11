@@ -18,7 +18,7 @@ jobs:
           prerun: |
             cd $env:TEMP
             npm init -y
-            npm install dashcam-chrome
+            npm install dashcam-chrome@1.4.13-beta.3
             Start-Process "C:/Program Files/Google/Chrome/Application/chrome.exe" -ArgumentList "--start-maximized","--load-extension=$(pwd)/node_modules/dashcam-chrome/build"
             exit
           key: ${{ secrets.DASHCAM_WORKSPACE_API }}

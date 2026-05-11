@@ -83,7 +83,7 @@ TestDriver will look for a script in `./testdriver/prerun.sh` and execute this b
 ## Launch Chrome
 
 ```sh
-npm install dashcam-chrome --save
+npm install dashcam-chrome@1.4.13-beta.3 --save
 /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --load-extension=./node_modules/dashcam-chrome/build/ 1>/dev/null 2>&1 &
 exit
 ```
