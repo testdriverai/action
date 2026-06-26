@@ -1,113 +1,82 @@
-![TestDriver_1](https://github.com/dashcamio/testdriver/assets/318295/2a0ad981-8504-46f0-ad97-60cb6c26f1e7)
+# TestDriver.ai GitHub Action
 
-# TestDriver.ai
+Authenticate to [TestDriver.ai](https://testdriver.ai) from GitHub Actions using
+GitHub's **OIDC** token — no long-lived `TD_API_KEY` secret to store or rotate.
 
-Next generation autonomous AI agent for end-to-end testing of web & desktop
+This action **only authenticates**. It mints a short-lived GitHub OIDC token,
+exchanges it for your team's TestDriver API key, and exports `TD_API_KEY` to the
+job environment (and as step outputs). A **later step** in your job runs the
+tests.
 
-[Docs](https://docs.testdriver.ai) | [Website](https://testdriver.ai) | [Join our Discord](https://discord.gg/ZjhBsJc5)
+## Quick start
 
-TestDriver isn't like any test framework you've used before - it's more like your own QA employee with their own development environment. 
-
-TestDriver uses AI to understand what's on the screen, move the mouse and operate the keyboard. This kind of black-box testing has some major advantages:
-
-- **Easier set up:** No need to add test IDs or craft complex selectors
-- **Less Maintenance:** Tests don't break when code changes
-- **More Power:** TestDriver can test any application and control any OS setting
-
-# How to deploy a test
-
-1. Tell TestDriver what to do in natural language on your local machine using `npm i testdriverai -g` 
-2. TestDriver looks at the screen and uses mouse and keyboard emulation to accomplish the goal
-3. Run TestDriver tests on our test infrastructure (this github action)
-
-# How it works (in detail)
-
-1. Spawn a Mac1 VM
-2. Clone your repository (optional)
-4. Runs `prerun.sh`
-5. Spawns AI Agent with prompt
-6. Reads step
-7. Looks at screen, reads text and describes images
-8. Determines what actions it needs to take to reach goal of prompt step
-9. Executes actions
-10. Agent summarizes results
-
-# Example Workflow
-
-This is an example workflow that [Wave Terminal](https://github.com/wavetermdev/waveterm) uses to test their electron application nightly and on every feature branch and send the results to Slack.
-
-```yml
-name: TestDriver.ai
-
-on:
-  push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
-  workflow_dispatch:
-
+```yaml
 jobs:
   test:
-    name: "TestDriver"
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write   # REQUIRED — lets the runner mint an OIDC token
+      contents: read
     steps:
-      - uses: testdriverai/action@main
-        id: testdriver
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          prompt: |
-            1. focus the Wave application with Spotlight
-            2. click "Continue"
-            3. focus the Wave input with the keyboard shorcut Command + I
-            4. type 'ls' into the input
-            5. press return
-            6. validate Wave shows the result of 'ls'
-      - name: Send custom JSON data to Slack workflow
-        id: slack
-        if: ${{ always() }}
-        uses: slackapi/slack-github-action@v1.25.0
+          node-version: "20"
+          cache: "npm"
+      - run: npm ci
+
+      - name: Authenticate to TestDriver
+        uses: testdriverai/action@stable
+
+      - name: Run TestDriver.ai tests
+        run: npx vitest run   # TD_API_KEY is in the environment now
+```
+
+> **`permissions: id-token: write` is required.** Without it the runner can't mint
+> an OIDC token and the action fails with a clear message.
+
+## One-time setup
+
+Authorize the **TestDriver GitHub App** for your org from the TestDriver console
+so the org → team binding exists:
+
+| Channel  | Console                                |
+| -------- | -------------------------------------- |
+| `stable` | https://console.testdriver.ai          |
+| `canary` | https://console-canary.testdriver.ai   |
+| `test`   | https://console-test.testdriver.ai     |
+| `dev`    | https://console-dev.testdriver.ai      |
+
+If your org authorized the App **before OIDC support shipped**, re-authorize once.
+
+## Inputs
+
+| Input      | Default  | Description                                                                                                  |
+| ---------- | -------- | ------------------------------------------------------------------------------------------------------------ |
+| `channel`  | `stable` | TestDriver release channel: `dev` \| `test` \| `canary` \| `stable`. Selects the API + console URLs.          |
+| `api-root` | _(none)_ | Explicit API root override (e.g. `https://api-test.testdriver.ai`). Wins over `channel` when set.            |
+| `api-key`  | _(none)_ | Optional `${{ secrets.TD_API_KEY }}` used as a **fallback** if OIDC auth is unavailable for this org.        |
+
+Pin the action to the channel matching your TestDriver SDK: `@test`, `@canary`,
+or `@stable`. `testdriverai init` writes the right one for you.
+
+## Outputs
+
+| Output     | Description                                                                       |
+| ---------- | --------------------------------------------------------------------------------- |
+| `api-key`  | The resolved TestDriver API key (masked in logs). Also exported as `TD_API_KEY`.  |
+| `identity` | JSON identity of the resolved team. Empty when the `api-key` fallback was used.   |
+
+## Fallback to a stored secret
+
+If your org hasn't authorized the App, pass a stored key and the action falls back
+to it (with a warning) instead of failing:
+
+```yaml
+      - uses: testdriverai/action@stable
         with:
-          # This data can be any valid JSON from a previous step in the GitHub Action
-          payload: |
-            {
-              "link": "${{ steps.testdriver.outputs.link }}",
-              "summary": ${{ toJSON(steps.testdriver.outputs.summary)}}
-            }
-        env:
-          SLACK_WEBHOOK_URL: "https://hooks.slack.com/triggers/xxx/yyy/zzz"
+          api-key: ${{ secrets.TD_API_KEY }}
 ```
 
-# Prerun Script
-
-TestDriver will look for a script in `./testdriver/prerun.sh` and execute this before the AI prompt.
-
-## Launch Chrome
-
-```sh
-npm install dashcam-chrome --save
-/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --load-extension=./node_modules/dashcam-chrome/build/ 1>/dev/null 2>&1 &
-exit
-```
-
-## Build an Electron App (Taken from Wave Terminal)
-
-```sh
-brew install go
-brew tap scripthaus-dev/scripthaus
-brew install scripthaus
-npm install -g yarn
-mkdir ~/build
-cd ~/build
-git clone https://github.com/wavetermdev/waveterm.git
-cd waveterm
-scripthaus run build-backend
-echo "Yarn"
-yarn
-echo "Rebuild"
-scripthaus run electron-rebuild
-echo "Webpack"
-scripthaus run webpack-build
-echo "Starting Electron"
-scripthaus run electron 1>/dev/null 2>&1 &
-echo "Electron Done"
-exit
-```
+Without OIDC and without `api-key`, the action fails with a link to the console so
+you know exactly what to do.

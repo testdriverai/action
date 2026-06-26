@@ -1,72 +1,155 @@
-name: TestDriver.ai
-description: AI QA Agent for GitHub
-author: Dashcam.io
+name: "TestDriver.ai"
+description: >-
+  Authenticate to TestDriver.ai from GitHub Actions using GitHub's OIDC token —
+  no stored TD_API_KEY secret required. Exports TD_API_KEY for later steps.
+author: "TestDriver.ai"
+
 branding:
-  icon: "user-check"
-  color: "green"
+  icon: "play-circle"
+  color: "purple"
+
+# This action ONLY authenticates. It mints a GitHub OIDC token, exchanges it for
+# your team's TestDriver API key, and exports TD_API_KEY to $GITHUB_ENV (and as
+# step outputs) so a LATER step in your job can run the tests. It does not run
+# tests itself.
+#
+# Requirements in the calling job:
+#   permissions:
+#     id-token: write   # REQUIRED — lets the runner mint an OIDC token
+#     contents: read
+#
+# One-time setup: authorize the TestDriver GitHub App for your org at the console
+# (see consoleUrl for your channel) so the org -> team binding exists. If your org
+# authorized the App before OIDC support shipped, re-authorize once.
+
 inputs:
-  prompt:
-    description: >-
-      The prompt to test. Example:
-      1. Open Google Chrome
-      2. Go to YouTube.com
-      3. Search for "Rick Astley"
-      4. Click on the first video
-    required: true
-  prerun:
-    description: >-
-      A script to run before the test.
+  channel:
+    description: "TestDriver release channel: dev | test | canary | stable. Selects the API + console URLs."
     required: false
-  branch:
-    description: >-
-      The TestDriver branch to run. Defaults to "main"
+    default: "stable"
+  api-root:
+    description: "Explicit API root override (e.g. https://api-test.testdriver.ai). When set, wins over `channel`."
     required: false
-  key:
-    description: >-
-      Your Dashcam API key
+    default: ""
+  api-key:
+    description: "Optional TD_API_KEY (e.g. ${{ secrets.TD_API_KEY }}). Used as a fallback if OIDC auth is unavailable for this org."
     required: false
-  os:
-    description: >-
-      The operating system to run tests on. Defaults to "windows". Can be "windows", "linux", or "mac"
-    required: false
-  version:
-    description: >-
-      The version of testdriverai to run. Defaults to "latest"
-    required: false
-  create-pr:
-    type: boolean
-    description: >-
-      Specify if a PR should be created with the updated test results. Defaults to "false"
-    default: "false"
-    required: false
-  pr-title:
-    description: >-
-      The title of the PR to be created
-    required: false
-  pr-base:
-    description: >-
-      The base branch to create the PR on.
-    default: main
-    required: false
-  pr-branch:
-    description: >-
-      The branch to create the PR from.
-    require: false
-  pr-test-filename:
-    description: >-
-      The filename of the test to be created in the PR.
-    required: false
+    default: ""
 
 outputs:
-  summary:
-    description: >-
-      The summary of the test result
-  link:
-    description: >-
-      The share link of Dashcam.io recording
-  markdown:
-    description: >-
-      A hotlinked image of the Dashcam.io recording
+  api-key:
+    description: "The resolved TestDriver API key (masked in logs)."
+    value: ${{ steps.auth.outputs.api-key }}
+  identity:
+    description: "JSON identity of the resolved team (echoed from the auth exchange). Empty when the api-key fallback was used."
+    value: ${{ steps.auth.outputs.identity }}
+
 runs:
-  using: node16
-  main: ./dist/index.js
+  using: "composite"
+  steps:
+    - name: Authenticate to TestDriver
+      id: auth
+      shell: bash
+      env:
+        TD_CHANNEL: ${{ inputs.channel }}
+        TD_API_ROOT_INPUT: ${{ inputs.api-root }}
+        TD_API_KEY_INPUT: ${{ inputs.api-key }}
+        CHANNELS_JSON: ${{ github.action_path }}/channels.json
+      run: |
+        set -uo pipefail
+
+        # --- Resolve endpoints from channel (or api-root override) -------------
+        CHANNEL="${TD_CHANNEL:-stable}"
+        if ! jq -e --arg c "$CHANNEL" 'has($c)' "$CHANNELS_JSON" >/dev/null 2>&1; then
+          echo "::error::Unknown TestDriver channel \"$CHANNEL\". Expected one of: dev, test, canary, stable."
+          exit 1
+        fi
+        CONSOLE_URL=$(jq -r --arg c "$CHANNEL" '.[$c].consoleUrl' "$CHANNELS_JSON")
+        if [ -n "${TD_API_ROOT_INPUT}" ]; then
+          API_ROOT="${TD_API_ROOT_INPUT%/}"
+        else
+          API_ROOT=$(jq -r --arg c "$CHANNEL" '.[$c].apiRoot' "$CHANNELS_JSON")
+        fi
+        echo "TestDriver channel: $CHANNEL"
+        echo "API root: $API_ROOT"
+
+        # Helper: adopt a key as the resolved TD_API_KEY (mask + export + output).
+        adopt_key() {
+          local key="$1"
+          echo "::add-mask::$key"
+          echo "TD_API_KEY=$key" >> "$GITHUB_ENV"
+          echo "api-key=$key" >> "$GITHUB_OUTPUT"
+        }
+
+        # Helper: use the api-key fallback if one was provided. Returns 0 on success.
+        use_fallback() {
+          if [ -n "${TD_API_KEY_INPUT}" ]; then
+            echo "::warning::Using the provided TD_API_KEY secret as a fallback (OIDC auth was unavailable)."
+            adopt_key "${TD_API_KEY_INPUT}"
+            echo "identity=" >> "$GITHUB_OUTPUT"
+            return 0
+          fi
+          return 1
+        }
+
+        # --- 1. Mint the OIDC token (audience must match the server) -----------
+        if [ -z "${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}" ] || [ -z "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" ]; then
+          echo "::error::No OIDC token request context. Add \`permissions: { id-token: write }\` to the job so the runner can mint an OIDC token."
+          if use_fallback; then exit 0; fi
+          exit 1
+        fi
+
+        OIDC_JSON=$(curl -sS \
+          -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+          "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=testdriver")
+        OIDC_TOKEN=$(echo "$OIDC_JSON" | jq -r '.value // empty')
+        if [ -z "$OIDC_TOKEN" ]; then
+          echo "::error::Failed to mint a GitHub OIDC token. Ensure \`permissions: { id-token: write }\` is set."
+          if use_fallback; then exit 0; fi
+          exit 1
+        fi
+        echo "OIDC token minted (length=${#OIDC_TOKEN})."
+
+        # --- 2. Exchange the OIDC token for the team's API key -----------------
+        RESP=$(curl -sS -w '\n%{http_code}' -X POST "$API_ROOT/github/actions/auth" \
+          -H "Content-Type: application/json" \
+          -d "{\"token\":\"$OIDC_TOKEN\"}")
+        BODY=$(echo "$RESP" | head -n -1)
+        CODE=$(echo "$RESP" | tail -n 1)
+        echo "Auth exchange HTTP status: $CODE"
+
+        ERR=$(echo "$BODY" | jq -r '.error // empty' 2>/dev/null)
+
+        # --- 3. Branch on the outcome ------------------------------------------
+        if [ "$CODE" = "200" ]; then
+          API_KEY=$(echo "$BODY" | jq -r '.apiKey // empty')
+          if [ -z "$API_KEY" ] || [ "$API_KEY" = "null" ]; then
+            echo "::error::Auth succeeded (200) but no apiKey was returned. Body: $BODY"
+            if use_fallback; then exit 0; fi
+            exit 1
+          fi
+          adopt_key "$API_KEY"
+          IDENTITY=$(echo "$BODY" | jq -c '.identity // {}')
+          echo "identity=$IDENTITY" >> "$GITHUB_OUTPUT"
+          echo "Resolved team identity:"
+          echo "$BODY" | jq '.identity // "no identity in response"'
+          echo "Authenticated to TestDriver via OIDC."
+          exit 0
+        fi
+
+        if [ "$CODE" = "403" ] && [ "$ERR" = "no_team" ]; then
+          if use_fallback; then exit 0; fi
+          echo "::error::The TestDriver GitHub App is not authorized for this organization. Authorize it at $CONSOLE_URL (re-authorize once if your org authorized before OIDC support shipped), or set a TD_API_KEY secret and pass it via the \`api-key\` input."
+          exit 1
+        fi
+
+        if [ "$CODE" = "401" ]; then
+          if use_fallback; then exit 0; fi
+          echo "::error::TestDriver rejected the OIDC token (401). This usually means a wrong audience or a missing \`permissions: { id-token: write }\`. Body: $BODY"
+          exit 1
+        fi
+
+        # Any other status.
+        if use_fallback; then exit 0; fi
+        echo "::error::TestDriver auth exchange failed (HTTP $CODE). Body: $BODY"
+        exit 1
