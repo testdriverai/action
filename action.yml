@@ -32,7 +32,7 @@ inputs:
     required: false
     default: ""
   api-key:
-    description: "Optional TD_API_KEY (e.g. ${{ secrets.TD_API_KEY }}). Used as a fallback if OIDC auth is unavailable for this org."
+    description: "Optional TD_API_KEY (e.g. the secrets.TD_API_KEY value). Used as a fallback if OIDC auth is unavailable for this org."
     required: false
     default: ""
 
