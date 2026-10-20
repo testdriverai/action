@@ -29,7 +29,7 @@ jobs:
         uses: testdriverai/action@stable
 
       - name: Run TestDriver.ai tests
-        run: npx vitest run   # TD_API_KEY is in the environment now
+        run: vitest run   # TD_API_KEY is in the environment now
 ```
 
 > **`permissions: id-token: write` is required.** Without it the runner can't mint
